@@ -128,16 +128,69 @@
     box-shadow:0 1px 6px var(--shadow), inset 0 3px 10px var(--shadow-deep), inset 0 1px 0 var(--parchment); }
   #page-drum .dpad.hit::after{ opacity:0; }
 
-  /* ════ PAGE: KEYS — MegaSynth skin (near-black / neon red, original fonts) ════ */
-  #page-keys{ background:#060303; color:#ff4040; font-family:'Share Tech Mono',monospace; padding:16px 16px 24px; }
-  #page-keys .ms-head{ display:flex; flex-direction:column; margin-bottom:18px; }
-  #page-keys .ms-logo{ font-family:'Orbitron','Arial Black',sans-serif; font-weight:900; font-size:22px; color:#c81010; letter-spacing:5px; text-shadow:0 0 22px rgba(255,0,0,0.45); line-height:1; }
-  #page-keys .ms-sub{ font-size:8px; color:rgba(200,38,38,0.5); letter-spacing:3px; margin-top:5px; }
-  #page-keys .kb{ position:relative; height:170px; display:flex; gap:3px; border:1px solid #3a0808; border-radius:8px; padding:8px; background:#0c0404; box-shadow:inset 0 0 30px #00000080; }
-  #page-keys .wk{ position:relative; flex:1; border-radius:0 0 5px 5px; background:linear-gradient(#1a0a0a,#0e0505); border:1px solid #2a0808; cursor:pointer; transition:background .05s, box-shadow .08s; }
-  #page-keys .wk:active, #page-keys .wk.on{ background:linear-gradient(#ff3030,#c81010); box-shadow:0 0 20px -2px #ff0000cc; }
-  #page-keys .bk{ position:absolute; top:8px; width:7%; height:58%; border-radius:0 0 4px 4px; background:linear-gradient(#2a0e0e,#070202); border:1px solid #1a0404; cursor:pointer; z-index:2; transition:background .05s, box-shadow .08s; }
-  #page-keys .bk:active, #page-keys .bk.on{ background:linear-gradient(#ff2020,#a00808); box-shadow:0 0 18px -2px #ff0000cc; }
+  /* ════ PAGE: KEYS — MegaSynth (ported from original, scoped + ms- prefixed) ════ */
+  :root[data-page="keys"] .chrome-top{ display:none; }            /* auto-hide transport on Keys */
+  #page-keys{ overflow:hidden; background:#060303; }
+  #page-keys #ms-app{ display:flex; flex-direction:column; width:100%; height:100%; padding:8px; gap:5px;
+    background:#060303; background-image:radial-gradient(ellipse at 50% -10%, rgba(110,0,0,0.25) 0%, transparent 60%); }
+  #page-keys #ms-header{ display:flex; align-items:center; gap:8px; flex-shrink:0; height:46px; }
+  #page-keys .ms-logo-wrap{ flex-shrink:0; }
+  #page-keys .ms-logo{ font-family:'Orbitron','Arial Black',sans-serif; font-weight:900; font-size:clamp(12px,4.5vw,22px); color:#c81010; letter-spacing:5px; text-shadow:0 0 22px rgba(255,0,0,0.45); white-space:nowrap; line-height:1; }
+  #page-keys .ms-sub{ font-size:clamp(5px,1.6vw,8px); color:rgba(200,38,38,0.32); letter-spacing:3px; white-space:nowrap; margin-top:3px; }
+  #page-keys #ms-scope-wrap{ flex:1; height:100%; background:rgba(4,0,0,0.9); border:1px solid rgba(140,18,18,0.28); border-radius:7px; overflow:hidden; position:relative; }
+  #page-keys #ms-scope{ display:block; width:100%; height:100%; }
+  #page-keys #ms-scope-idle{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:7px; color:rgba(200,35,35,0.35); letter-spacing:3px; pointer-events:none; }
+  #page-keys #ms-pwr-led{ width:9px; height:9px; border-radius:50%; background:#1e0404; flex-shrink:0; transition:background .3s, box-shadow .3s; }
+  #page-keys #ms-pwr-led.on{ background:#ff1a1a; box-shadow:0 0 8px #f00,0 0 18px rgba(255,0,0,.45); }
+  #page-keys #ms-sel-bar{ display:flex; align-items:center; gap:4px; flex-shrink:0; background:rgba(4,0,0,0.72); border:1px solid rgba(130,15,15,0.25); border-radius:9px; padding:5px 8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  #page-keys #ms-sel-bar::-webkit-scrollbar{ display:none; }
+  #page-keys .sel-group{ display:flex; align-items:center; gap:3px; flex-shrink:0; }
+  #page-keys .sel-lbl{ font-size:clamp(6px,1.8vw,9px); color:rgba(200,35,35,0.38); letter-spacing:2px; white-space:nowrap; margin-right:2px; }
+  #page-keys .sel-sep{ width:1px; align-self:stretch; background:rgba(150,18,18,0.22); margin:0 4px; flex-shrink:0; }
+  #page-keys .sbtn{ height:32px; min-width:32px; padding:0 7px; border-radius:6px; background:rgba(14,2,2,0.8); border:1px solid rgba(75,8,8,0.4); color:rgba(155,35,35,0.45); font-family:'Share Tech Mono',monospace; font-size:clamp(7px,2.2vw,11px); letter-spacing:1px; cursor:pointer; -webkit-appearance:none; white-space:nowrap; display:flex; align-items:center; justify-content:center; gap:4px; transition:background .1s,border-color .1s,color .1s,box-shadow .1s; touch-action:manipulation; }
+  #page-keys .sbtn.on{ background:rgba(140,12,12,0.72); border-color:rgba(255,55,55,0.55); color:rgba(255,105,105,0.95); box-shadow:0 0 10px rgba(255,0,0,0.18); }
+  #page-keys .sbtn svg{ display:block; flex-shrink:0; }
+  #page-keys #ms-knob-strip{ display:flex; align-items:flex-end; gap:10px; flex-shrink:0; background:rgba(4,0,0,0.72); border:1px solid rgba(130,15,15,0.25); border-radius:9px; padding:6px 10px 8px; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  #page-keys #ms-knob-strip::-webkit-scrollbar{ display:none; }
+  #page-keys .kstrip-grp{ display:flex; flex-direction:column; align-items:center; gap:4px; flex-shrink:0; }
+  #page-keys .kstrip-lbl{ font-size:clamp(5px,1.5vw,7px); color:rgba(255,42,42,0.32); letter-spacing:3px; white-space:nowrap; }
+  #page-keys .kstrip-row{ display:flex; gap:10px; }
+  #page-keys .kstrip-sep{ width:1px; align-self:stretch; background:rgba(150,18,18,0.18); margin:0 2px; flex-shrink:0; }
+  #page-keys .kwrap{ display:flex; flex-direction:column; align-items:center; gap:3px; flex-shrink:0; }
+  #page-keys .kbody{ width:44px; height:44px; border-radius:50%; position:relative; background:radial-gradient(circle at 33% 28%, #2e1c1c, #0c0404); border:2px solid rgba(185,22,22,0.52); box-shadow:0 0 12px rgba(255,0,0,0.08), inset 0 2px 4px rgba(255,255,255,0.03), inset 0 -2px 3px rgba(0,0,0,0.55); cursor:ns-resize; touch-action:none; }
+  #page-keys .ktick{ position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; pointer-events:none; }
+  #page-keys .kptr{ position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; padding-top:4px; pointer-events:none; }
+  #page-keys .kneedle{ width:2.5px; height:14px; border-radius:2px; background:linear-gradient(to bottom,#ff1a1a,#880000); box-shadow:0 0 7px rgba(255,25,25,0.65); }
+  #page-keys .kgloss{ position:absolute; top:7px; left:10px; width:10px; height:7px; border-radius:50%; background:rgba(255,255,255,0.035); pointer-events:none; }
+  #page-keys .klbl{ font-size:clamp(6px,1.8vw,8px); color:rgba(225,50,50,0.7); letter-spacing:2px; text-transform:uppercase; }
+  #page-keys .kval{ font-size:clamp(6px,1.6vw,7.5px); color:rgba(255,70,70,0.3); font-family:monospace; }
+  #page-keys #ms-kb-wrap{ flex:1; min-height:0; position:relative; overflow:hidden; border-radius:10px; border:1px solid rgba(125,12,12,0.5); box-shadow:0 5px 24px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,55,55,0.05); background:#080101; }
+  #page-keys #ms-kb{ position:absolute; inset:0; }
+  #page-keys .wk{ position:absolute; top:0; bottom:0; border-left:1px solid rgba(0,0,0,0.5); border-right:1px solid rgba(0,0,0,0.3); border-bottom:7px solid rgba(44,2,2,0.97); border-radius:0 0 6px 6px; background:linear-gradient(to bottom, rgba(162,16,16,0.92) 0%, rgba(108,7,7,0.96) 62%, rgba(86,4,4,0.99) 100%); box-shadow:inset 0 1px 0 rgba(255,125,125,0.1); touch-action:none; cursor:pointer; transition:background .04s,box-shadow .04s,border-bottom .04s; }
+  #page-keys .wk::after{ content:''; position:absolute; top:0; left:0; right:0; height:22%; background:linear-gradient(to bottom,rgba(255,110,110,0.07),transparent); pointer-events:none; }
+  #page-keys .wk.on{ background:linear-gradient(to bottom,#8a0c0c,#6a0707); border-bottom:2px solid rgba(255,70,70,0.55); box-shadow:inset 0 3px 10px rgba(0,0,0,0.78); }
+  #page-keys .bk{ position:absolute; top:0; z-index:2; border-radius:0 0 4px 4px; background:linear-gradient(to bottom,#1d1d1d,#0a0a0a 54%,#050505); border:1px solid #000; border-bottom:5px solid #030303; box-shadow:2px 5px 11px rgba(0,0,0,0.95), inset 1px 0 2px rgba(255,255,255,0.025); touch-action:none; cursor:pointer; transition:background .04s,box-shadow .04s,border-bottom .04s; }
+  #page-keys .bk::after{ content:''; position:absolute; top:4px; left:3px; right:3px; height:14%; background:rgba(255,255,255,0.03); border-radius:2px; pointer-events:none; }
+  #page-keys .bk.on{ background:linear-gradient(to bottom,#262626,#131313); border-bottom:1px solid #2a2a2a; box-shadow:inset 0 2px 8px rgba(255,25,25,0.1); }
+  @media (orientation: landscape){
+    #page-keys #ms-app{ gap:3px; padding-top:3px; padding-bottom:3px; }
+    #page-keys #ms-header{ height:34px; gap:6px; }
+    #page-keys .ms-sub{ display:none; }
+    #page-keys .ms-logo{ font-size:clamp(10px,2.5vw,16px); letter-spacing:4px; }
+    #page-keys #ms-pwr-led{ width:7px; height:7px; }
+    #page-keys #ms-sel-bar{ padding:3px 6px; gap:3px; border-radius:7px; }
+    #page-keys .sbtn{ height:26px; min-width:26px; padding:0 6px; font-size:clamp(6px,1.8vw,9px); }
+    #page-keys .sbtn svg{ width:24px; height:16px; }
+    #page-keys #ms-knob-strip{ padding:3px 8px 4px; gap:8px; border-radius:7px; }
+    #page-keys .kbody{ width:32px; height:32px; }
+    #page-keys .kneedle{ width:2px; height:10px; }
+    #page-keys .kgloss{ top:5px; left:7px; width:7px; height:5px; }
+    #page-keys .klbl{ font-size:clamp(5px,1.4vw,6.5px); }
+    #page-keys .kval{ display:none; }
+    #page-keys .kstrip-lbl{ font-size:clamp(4px,1.2vw,6px); letter-spacing:2px; }
+    #page-keys .kstrip-row{ gap:7px; }
+    #page-keys .kstrip-grp{ gap:2px; }
+  }
 </style>
 </head>
 <body>
@@ -192,8 +245,22 @@
     </div>
 
     <div class="page" id="page-keys">
-      <div class="ms-head"><div class="ms-logo">MEGASYNTH</div><div class="ms-sub">ANALOG · DIGITAL · SYNTHESIZER</div></div>
-      <div class="kb" id="kb"></div>
+      <div id="ms-app">
+        <div id="ms-header">
+          <div class="ms-logo-wrap"><div class="ms-logo">MEGASYNTH</div><div class="ms-sub">ANALOG · DIGITAL · SYNTHESIZER</div></div>
+          <div id="ms-scope-wrap"><canvas id="ms-scope"></canvas><div id="ms-scope-idle">TOUCH A KEY TO BEGIN</div></div>
+          <div id="ms-pwr-led"></div>
+        </div>
+        <div id="ms-sel-bar">
+          <div class="sel-group"><span class="sel-lbl">WAVE</span><div id="ms-wave-grp" style="display:flex;gap:3px;"></div></div>
+          <div class="sel-sep"></div>
+          <div class="sel-group"><span class="sel-lbl">KEYS</span><div id="ms-rng-grp" style="display:flex;gap:3px;"></div></div>
+          <div class="sel-sep"></div>
+          <div class="sel-group"><span class="sel-lbl">OCT</span><div id="ms-oct-grp" style="display:flex;gap:3px;"></div></div>
+        </div>
+        <div id="ms-knob-strip"></div>
+        <div id="ms-kb-wrap"><div id="ms-kb"></div></div>
+      </div>
     </div>
 
   </div>
@@ -288,6 +355,7 @@ function showPage(id){
   document.querySelectorAll('.page').forEach(p=> p.classList.toggle('active', p.id==='page-'+id));
   document.querySelectorAll('.tab').forEach(t=> t.classList.toggle('on', t.dataset.page===id));
   document.documentElement.setAttribute('data-page', id);
+  if(id==='keys' && window.MSRelayout) requestAnimationFrame(window.MSRelayout);
 }
 document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click',()=>{ Suite.ensureAudio(); showPage(t.dataset.page); }));
 
@@ -505,29 +573,158 @@ DPADS.forEach(([name,fn])=>{
 });
 
 /* ════════════════════════════════════════════════════════════
-   PAGE: KEYS — live stub (MegaSynth palette). Plays via shared bus.
+   PAGE: KEYS — MegaSynth engine, ported from the original into the suite.
+   Wrapped in a closure; ms- prefixed DOM; audio routed into Suite.master.
    ════════════════════════════════════════════════════════════ */
-function playSynthKey(t,freq,out){ const ctx=Suite.ctx;
-  const o=ctx.createOscillator(); o.type='sawtooth'; o.frequency.value=freq;
-  const f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.setValueAtTime(2400,t); f.frequency.exponentialRampToValueAtTime(900,t+0.4); f.Q.value=2;
-  const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.26,t+0.01); g.gain.exponentialRampToValueAtTime(0.11,t+0.12); g.gain.exponentialRampToValueAtTime(0.0001,t+0.6);
-  o.connect(f).connect(g); g.connect(out);
-  const s=ctx.createGain(); s.gain.value=0.18; g.connect(s); s.connect(Suite.revIn);
-  o.start(t); o.stop(t+0.62); }
+(function(){
+  const $ = id => document.getElementById(id);
+  const BF={C:261.63,'C#':277.18,D:293.66,'D#':311.13,E:329.63,F:349.23,'F#':369.99,G:392,'G#':415.3,A:440,'A#':466.16,B:493.88};
+  const hz=(n,o)=>BF[n]*Math.pow(2,o-4);
+  const WN=['C','D','E','F','G','A','B'];
+  const BN=['C#','D#','F#','G#','A#'];
+  const BP=[0.62,1.62,3.62,4.62,5.62];
+  const WPATHS={ sine:'M1 12 C3.5 2 6.5 2 10 12 C13.5 22 16.5 22 19 12', triangle:'M1 19 L7 3 L13 19 L19 3', sawtooth:'M1 19 L11 3 L11 19 L19 3', square:'M1 4 L8 4 L8 20 L14 20 L14 4 L19 4' };
+  const KNOB_GROUPS=[
+    {lbl:'ENV',knobs:[{p:'attack',l:'ATK',min:.001,max:4,v:.015},{p:'decay',l:'DEC',min:.01,max:4,v:.28},{p:'sustain',l:'SUS',min:0,max:1,v:.65},{p:'release',l:'REL',min:.01,max:6,v:.45}]},
+    {lbl:'FILTER',knobs:[{p:'cutoff',l:'CUT',min:0,max:1,v:.76},{p:'resonance',l:'RES',min:0,max:1,v:.14}]},
+    {lbl:'FX/MIX',knobs:[{p:'reverb',l:'REV',min:0,max:1,v:.18},{p:'detune',l:'DET',min:-1,max:1,v:0},{p:'volume',l:'VOL',min:0,max:1,v:.72}]},
+  ];
+  const P={attack:.015,decay:.28,sustain:.65,release:.45,cutoff:.76,resonance:.14,reverb:.18,detune:0,volume:.72};
+  let bus=null,analyser=null,booted=false;
+  let wave='sawtooth',oct=4,rng=2;
+  const held={};
 
-const kbEl=document.getElementById('kb');
-const WHITES=[60,62,64,65,67,69,71,72];
-const BLACKS=[[61,9.0],[63,21.5],[66,46.5],[68,58.5],[70,71.5]];
-function bindKey(el,m){
-  const trigger=e=>{ e.preventDefault(); Suite.ensureAudio(); playSynthKey(Suite.ctx.currentTime, mtf(m), Suite.master); el.classList.add('on'); };
-  const release=()=>el.classList.remove('on');
-  el.addEventListener('pointerdown',trigger);
-  el.addEventListener('pointerup',release);
-  el.addEventListener('pointerleave',release);
-  el.addEventListener('pointercancel',release);
-}
-WHITES.forEach(m=>{ const k=document.createElement('div'); k.className='wk'; bindKey(k,m); kbEl.appendChild(k); });
-BLACKS.forEach(([m,left])=>{ const k=document.createElement('div'); k.className='bk'; k.style.left=left+'%'; bindKey(k,m); kbEl.appendChild(k); });
+  function synthEnsure(){
+    Suite.ensureAudio();
+    if(booted) return;
+    const actx=Suite.ctx;
+    const master=actx.createGain(); master.gain.value=P.volume;
+    const comp=actx.createDynamicsCompressor();
+    comp.threshold.value=-3;comp.knee.value=2;comp.ratio.value=20;comp.attack.value=.001;comp.release.value=.08;
+    analyser=actx.createAnalyser(); analyser.fftSize=1024;
+    master.connect(comp);comp.connect(analyser);analyser.connect(Suite.master);
+    const conv=actx.createConvolver();
+    const sr=actx.sampleRate,len=Math.floor(sr*2.5);
+    const ib=actx.createBuffer(2,len,sr);
+    for(let c=0;c<2;c++){const d=ib.getChannelData(c);for(let i=0;i<len;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/len,1.8);}
+    conv.buffer=ib;
+    const dry=actx.createGain();dry.gain.value=1;
+    const wet=actx.createGain();wet.gain.value=P.reverb*1.6;
+    dry.connect(master);wet.connect(conv);conv.connect(master);
+    bus={master,dry,wet};
+    $('ms-pwr-led').classList.add('on');
+    $('ms-scope-idle').style.display='none';
+    booted=true; startScope();
+  }
+
+  function noteOn(id,f){
+    synthEnsure(); const actx=Suite.ctx;
+    if(held[id])return;
+    const osc=actx.createOscillator();
+    osc.type=wave; osc.frequency.value=f; osc.detune.value=P.detune*100;
+    const filt=actx.createBiquadFilter();
+    filt.type='lowpass'; filt.frequency.value=60+Math.pow(P.cutoff,2)*18500; filt.Q.value=P.resonance*28;
+    const env=actx.createGain();
+    const t=actx.currentTime;
+    env.gain.setValueAtTime(.00001,t);
+    env.gain.exponentialRampToValueAtTime(.88,t+Math.max(.003,P.attack));
+    env.gain.exponentialRampToValueAtTime(Math.max(.00001,P.sustain*.88),t+P.attack+Math.max(.003,P.decay));
+    osc.connect(filt);filt.connect(env);env.connect(bus.dry);env.connect(bus.wet);
+    osc.start(); held[id]={osc,env}; markKey(id,true);
+  }
+  function noteOff(id){
+    const n=held[id]; if(!n||!Suite.ctx)return;
+    const actx=Suite.ctx; const t=actx.currentTime,rel=Math.max(.003,P.release);
+    n.env.gain.cancelScheduledValues(t);
+    n.env.gain.setValueAtTime(Math.max(.00001,n.env.gain.value),t);
+    n.env.gain.exponentialRampToValueAtTime(.00001,t+rel);
+    n.osc.stop(t+rel+.06);
+    delete held[id]; markKey(id,false);
+  }
+  function markKey(id,on){
+    const els=$('ms-kb').querySelectorAll('[data-nid]');
+    for(let i=0;i<els.length;i++) if(els[i].getAttribute('data-nid')===id) els[i].classList.toggle('on',on);
+  }
+
+  function startScope(){
+    const cv=$('ms-scope'),wr=$('ms-scope-wrap'),cx=cv.getContext('2d');
+    const buf=new Float32Array(analyser.fftSize);
+    function sz(){const dpr=window.devicePixelRatio||1;cv.width=wr.offsetWidth*dpr;cv.height=wr.offsetHeight*dpr;}
+    sz(); window.addEventListener('resize',sz);
+    (function frame(){
+      requestAnimationFrame(frame);
+      if(!analyser)return;
+      analyser.getFloatTimeDomainData(buf);
+      const W=cv.width,H=cv.height;
+      cx.fillStyle='rgba(5,0,0,0.84)';cx.fillRect(0,0,W,H);
+      cx.strokeStyle='rgba(140,14,14,0.15)';cx.lineWidth=1;
+      for(let g=1;g<4;g++){cx.beginPath();cx.moveTo(0,H*g/4);cx.lineTo(W,H*g/4);cx.stroke();}
+      for(let g=1;g<8;g++){cx.beginPath();cx.moveTo(W*g/8,0);cx.lineTo(W*g/8,H);cx.stroke();}
+      cx.strokeStyle='rgba(200,22,22,0.2)';cx.beginPath();cx.moveTo(0,H/2);cx.lineTo(W,H/2);cx.stroke();
+      for(let p=0;p<2;p++){
+        cx.beginPath();
+        cx.strokeStyle=p?'#c41c1c':'rgba(255,45,45,0.08)';cx.lineWidth=p?1.4:6;cx.shadowBlur=p?5:0;cx.shadowColor='#f00';
+        const step=Math.max(1,Math.floor(buf.length/W));
+        for(let x=0;x<W;x++){const v=buf[x*step]||0,y=(1-(v+1)/2)*H;x?cx.lineTo(x,y):cx.moveTo(x,y);}
+        cx.stroke();
+      }
+      cx.shadowBlur=0;
+    })();
+  }
+
+  function buildKeyboard(){
+    Object.keys(held).forEach(noteOff);
+    const wrap=$('ms-kb-wrap'),kb=$('ms-kb');
+    if(!wrap||!kb) return;
+    kb.innerHTML='';
+    const W=wrap.offsetWidth, H=wrap.offsetHeight;
+    if(W===0||H===0) return;
+    const wkW=W/(rng*7), bkW=wkW*.58, bkH=H*.60;
+    for(let oi=0;oi<rng;oi++){
+      const o=oct+oi, ox=oi*7*wkW;
+      WN.forEach((n,i)=>{ const id=n+o,el=document.createElement('div'); el.className='wk'; el.setAttribute('data-nid',id); el.style.left=(ox+i*wkW)+'px'; el.style.width=(wkW-1)+'px'; bindKey(el,id,n,o); kb.appendChild(el); });
+      BN.forEach((n,i)=>{ const id=n+o,el=document.createElement('div'); el.className='bk'; el.setAttribute('data-nid',id); el.style.left=(ox+BP[i]*wkW)+'px'; el.style.width=bkW+'px'; el.style.height=bkH+'px'; bindKey(el,id,n,o); kb.appendChild(el); });
+    }
+  }
+  function bindKey(el,id,n,o){
+    const f=hz(n,o);
+    el.addEventListener('mousedown',e=>{e.preventDefault();noteOn(id,f);},{passive:false});
+    el.addEventListener('mouseup',()=>noteOff(id));
+    el.addEventListener('mouseleave',()=>noteOff(id));
+    el.addEventListener('touchstart',e=>{e.preventDefault();noteOn(id,f);},{passive:false});
+    el.addEventListener('touchend',e=>{e.preventDefault();noteOff(id);},{passive:false});
+    el.addEventListener('touchcancel',e=>{e.preventDefault();noteOff(id);},{passive:false});
+  }
+  function buildWaveSel(){ const grp=$('ms-wave-grp'); ['sine','triangle','sawtooth','square'].forEach(w=>{ const btn=document.createElement('button'); btn.className='sbtn'+(w===wave?' on':''); btn.setAttribute('data-wave',w); const col=w===wave?'#ff4040':'rgba(190,35,35,0.3)'; btn.innerHTML='<svg width="28" height="18" viewBox="0 0 20 24"><path d="'+WPATHS[w]+'" stroke="'+col+'" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'; btn.addEventListener('click',()=>{ wave=w; grp.querySelectorAll('.sbtn[data-wave]').forEach(b=>{ const on=b.getAttribute('data-wave')===w; b.classList.toggle('on',on); b.querySelector('path').setAttribute('stroke',on?'#ff4040':'rgba(190,35,35,0.3)'); }); }); grp.appendChild(btn); }); }
+  function buildRngSel(){ const grp=$('ms-rng-grp'); [{v:1,l:'1 OCT'},{v:2,l:'2 OCT'},{v:3,l:'3 OCT'}].forEach(def=>{ const btn=document.createElement('button'); btn.className='sbtn'+(def.v===rng?' on':''); btn.textContent=def.l; btn.setAttribute('data-r',def.v); btn.addEventListener('click',()=>{ rng=def.v; grp.querySelectorAll('.sbtn[data-r]').forEach(b=>b.classList.toggle('on',parseInt(b.getAttribute('data-r'))===rng)); buildKeyboard(); }); grp.appendChild(btn); }); }
+  function buildOctSel(){ const grp=$('ms-oct-grp'); [2,3,4,5,6].forEach(o=>{ const btn=document.createElement('button'); btn.className='sbtn'+(o===oct?' on':''); btn.textContent=o; btn.setAttribute('data-o',o); btn.addEventListener('click',()=>{ oct=o; grp.querySelectorAll('.sbtn[data-o]').forEach(b=>b.classList.toggle('on',parseInt(b.getAttribute('data-o'))===o)); buildKeyboard(); }); grp.appendChild(btn); }); }
+  function buildKnobs(){ const strip=$('ms-knob-strip'); KNOB_GROUPS.forEach((grp,gi)=>{ if(gi>0){const sep=document.createElement('div');sep.className='kstrip-sep';strip.appendChild(sep);} const wrap=document.createElement('div');wrap.className='kstrip-grp'; const lbl=document.createElement('div');lbl.className='kstrip-lbl';lbl.textContent=grp.lbl; const row=document.createElement('div');row.className='kstrip-row'; grp.knobs.forEach(def=>buildKnob(def,row)); wrap.appendChild(lbl);wrap.appendChild(row);strip.appendChild(wrap); }); }
+  function buildKnob(def,container){
+    const wrap=document.createElement('div');wrap.className='kwrap';
+    const body=document.createElement('div');body.className='kbody';
+    for(let i=0;i<11;i++){ const a=-135+i*27,major=(i===0||i===5||i===10); const t=document.createElement('div');t.className='ktick';t.style.transform='rotate('+a+'deg)'; const ln=document.createElement('div'); ln.style.cssText='width:'+(major?2:1.5)+'px;height:'+(major?7:4)+'px;margin-top:2px;border-radius:1px;background:'+(major?'rgba(255,50,50,0.46)':'rgba(195,28,28,0.2)')+';'; t.appendChild(ln);body.appendChild(t); }
+    const pw=document.createElement('div');pw.className='kptr'; const nd=document.createElement('div');nd.className='kneedle'; pw.appendChild(nd);body.appendChild(pw);
+    const gl=document.createElement('div');gl.className='kgloss';body.appendChild(gl);
+    const lbl=document.createElement('div');lbl.className='klbl';lbl.textContent=def.l;
+    const vd=document.createElement('div');vd.className='kval';
+    wrap.appendChild(body);wrap.appendChild(lbl);wrap.appendChild(vd); container.appendChild(wrap);
+    function apply(v){ P[def.p]=v; pw.style.transform='rotate('+(-135+((v-def.min)/(def.max-def.min))*270)+'deg)'; vd.textContent=Math.abs(v)<10?v.toFixed(2):v.toFixed(1); if(bus){ if(def.p==='volume')bus.master.gain.value=v; if(def.p==='reverb')bus.wet.gain.value=v*1.6; } }
+    body.addEventListener('mousedown',e=>{ e.preventDefault(); const sy=e.clientY,sv=P[def.p],range=def.max-def.min; const mm=e=>apply(Math.min(def.max,Math.max(def.min,sv+((sy-e.clientY)/120)*range))); const mu=()=>{window.removeEventListener('mousemove',mm);window.removeEventListener('mouseup',mu);}; window.addEventListener('mousemove',mm);window.addEventListener('mouseup',mu); });
+    body.addEventListener('touchstart',e=>{ e.preventDefault(); const sy=e.touches[0].clientY,sv=P[def.p],range=def.max-def.min; const tm=e=>{e.preventDefault();apply(Math.min(def.max,Math.max(def.min,sv+((sy-e.touches[0].clientY)/120)*range)));}; const te=()=>{body.removeEventListener('touchmove',tm);body.removeEventListener('touchend',te);body.removeEventListener('touchcancel',te);}; body.addEventListener('touchmove',tm,{passive:false}); body.addEventListener('touchend',te);body.addEventListener('touchcancel',te); },{passive:false});
+    apply(def.v);
+  }
+
+  const KM={a:['C',0],w:['C#',0],s:['D',0],e:['D#',0],d:['E',0],f:['F',0],t:['F#',0],g:['G',0],y:['G#',0],h:['A',0],u:['A#',0],j:['B',0],k:['C',1],o:['C#',1],l:['D',1],p:['D#',1]};
+  const kHeld={};
+  window.addEventListener('keydown',e=>{ if(document.documentElement.getAttribute('data-page')!=='keys')return; if(e.repeat||e.metaKey||e.ctrlKey)return; const m=KM[e.key];if(!m)return; const id=m[0]+(oct+m[1]); if(!kHeld[id]){kHeld[id]=true;noteOn(id,hz(m[0],oct+m[1]));} });
+  window.addEventListener('keyup',e=>{ const m=KM[e.key];if(!m)return; const id=m[0]+(oct+m[1]); delete kHeld[id];noteOff(id); });
+
+  let rsT;
+  window.addEventListener('resize',()=>{ if(document.documentElement.getAttribute('data-page')!=='keys')return; clearTimeout(rsT);rsT=setTimeout(buildKeyboard,120); });
+
+  buildWaveSel(); buildRngSel(); buildOctSel(); buildKnobs();
+  window.MSRelayout = buildKeyboard;
+})();
 
 /* ── init ── */
 setPlayIcon(false);
