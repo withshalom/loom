@@ -108,25 +108,71 @@
   @keyframes lblinks{ 0%,100%{ opacity:1;} 50%{ opacity:.45;} }
   #page-loom .hint{ text-align:center; font-size:11.5px; font-style:italic; color:var(--pfaint); padding:10px 0 0; min-height:18px; transition:opacity .3s; }
 
-  /* ════ PAGE: DRUMS — MicroDrum skin (cream / parchment / terracotta, true palette) ════ */
+  /* ════ PAGE: DRUMS — MicroDrum (ported from original, scoped under #page-drum) ════ */
   #page-drum{
     --cream:#f7f3ec; --parchment:#efe8d8; --warm-tan:#d4c4a8; --biscuit:#c8ae88;
     --brown:#8b6a42; --espresso:#4a3020; --shadow:rgba(74,48,32,0.11); --shadow-deep:rgba(74,48,32,0.22);
-    --accent:#b85c38; --text-soft:rgba(61,43,26,0.42);
-    background:var(--cream); color:var(--espresso); padding:16px 16px 24px;
+    --accent:#b85c38; --accent-lt:rgba(184,92,56,0.16); --text:#3d2b1a; --text-soft:rgba(61,43,26,0.42); --text-faint:rgba(61,43,26,0.20);
+    overflow:hidden; background:var(--cream); color:var(--text); font-family:'Lato',sans-serif; font-weight:300;
   }
-  #page-drum .md-head{ display:flex; flex-direction:column; margin-bottom:16px; }
-  #page-drum .md-logo{ font-family:'Playfair Display',Georgia,serif; font-weight:700; font-size:24px; color:var(--espresso); letter-spacing:1px; line-height:1; }
-  #page-drum .md-sub{ font-size:8px; color:var(--text-soft); letter-spacing:4px; text-transform:uppercase; margin-top:4px; }
-  #page-drum .dpads{ display:grid; grid-template-columns:repeat(3,1fr); gap:13px; }
-  #page-drum .dpad{ position:relative; aspect-ratio:1/1; border-radius:14px; border:1.5px solid var(--warm-tan); background:var(--cream);
-    box-shadow:0 5px 16px var(--shadow), 0 1px 3px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.82), inset 0 -2px 0 var(--shadow);
-    cursor:pointer; touch-action:none; overflow:hidden; transition:background .06s, box-shadow .06s, border-color .06s, transform .07s; }
-  #page-drum .dpad::before{ content:''; position:absolute; top:0; left:0; right:0; height:42%; background:linear-gradient(to bottom,rgba(255,255,255,0.58),transparent); border-radius:14px 14px 0 0; pointer-events:none; }
-  #page-drum .dpad::after{ content:''; position:absolute; bottom:0; left:0; right:0; height:5px; background:linear-gradient(to bottom,transparent,var(--shadow)); border-radius:0 0 14px 14px; pointer-events:none; transition:opacity .06s; }
-  #page-drum .dpad.hit{ background:var(--parchment); border-color:var(--biscuit); transform:scale(0.962) translateY(2px);
-    box-shadow:0 1px 6px var(--shadow), inset 0 3px 10px var(--shadow-deep), inset 0 1px 0 var(--parchment); }
-  #page-drum .dpad.hit::after{ opacity:0; }
+  #page-drum::before{ content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E"); }
+  #page-drum #app{ position:relative; z-index:1; display:flex; flex-direction:column; width:100%; height:100%; padding:10px 12px; gap:7px; }
+  #page-drum #header{ display:flex; align-items:center; gap:12px; flex-shrink:0; height:46px; }
+  #page-drum .logo-title{ font-family:'Playfair Display',Georgia,serif; font-weight:700; font-size:clamp(15px,4vw,24px); color:var(--espresso); letter-spacing:1px; line-height:1; flex-shrink:0; }
+  #page-drum .logo-sub{ font-size:clamp(6px,1.5vw,8px); color:var(--text-soft); letter-spacing:4px; text-transform:uppercase; margin-top:3px; }
+  #page-drum #scope-wrap{ flex:1; height:100%; background:var(--parchment); border:1px solid var(--warm-tan); border-radius:8px; overflow:hidden; position:relative; box-shadow:inset 0 1px 3px var(--shadow); }
+  #page-drum #scope{ display:block; width:100%; height:100%; }
+  #page-drum #scope-idle{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:7px; color:var(--text-faint); letter-spacing:4px; text-transform:uppercase; pointer-events:none; }
+  #page-drum #kit-wrap{ flex-shrink:0; position:relative; }
+  #page-drum #kit-select{ appearance:none; -webkit-appearance:none; background:var(--parchment); border:1px solid var(--warm-tan); border-radius:8px; padding:0 28px 0 10px; height:32px; font-family:'Lato',sans-serif; font-size:clamp(8px,2vw,11px); color:var(--espresso); letter-spacing:1px; cursor:pointer; box-shadow:0 1px 4px var(--shadow); min-width:128px; }
+  #page-drum #kit-select:focus{ outline:none; border-color:var(--biscuit); }
+  #page-drum #kit-arrow{ position:absolute; right:9px; top:50%; transform:translateY(-50%); pointer-events:none; width:0; height:0; border-left:4px solid transparent; border-right:4px solid transparent; border-top:5px solid var(--brown); }
+  #page-drum #knob-strip{ display:flex; align-items:flex-end; gap:10px; flex-shrink:0; background:var(--parchment); border:1px solid var(--warm-tan); border-radius:10px; padding:8px 14px 10px; box-shadow:0 1px 6px var(--shadow); overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  #page-drum #knob-strip::-webkit-scrollbar{ display:none; }
+  #page-drum .kgrp{ display:flex; flex-direction:column; align-items:center; gap:5px; flex-shrink:0; }
+  #page-drum .kgrp-lbl{ font-size:clamp(5px,1.4vw,7px); color:var(--text-soft); letter-spacing:3px; text-transform:uppercase; white-space:nowrap; }
+  #page-drum .krow{ display:flex; gap:10px; }
+  #page-drum .ksep{ width:1px; align-self:stretch; background:var(--warm-tan); margin:0 4px; flex-shrink:0; }
+  #page-drum .kwrap{ display:flex; flex-direction:column; align-items:center; gap:3px; flex-shrink:0; }
+  #page-drum .kbody{ width:46px; height:46px; border-radius:50%; position:relative; background:radial-gradient(circle at 34% 28%, #f0e8d8, #d4c0a0); border:2px solid var(--biscuit); box-shadow:0 3px 10px var(--shadow-deep), inset 0 2px 4px rgba(255,255,255,0.55), inset 0 -2px 3px var(--shadow); cursor:ns-resize; touch-action:none; }
+  #page-drum .ktick{ position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; pointer-events:none; }
+  #page-drum .ktick-line{ margin-top:3px; border-radius:1px; }
+  #page-drum .kptr{ position:absolute; inset:0; display:flex; align-items:flex-start; justify-content:center; padding-top:5px; pointer-events:none; }
+  #page-drum .kneedle{ width:2.5px; height:13px; border-radius:2px; background:linear-gradient(to bottom, var(--espresso), var(--brown)); box-shadow:0 1px 4px var(--shadow-deep); }
+  #page-drum .kgloss{ position:absolute; top:8px; left:11px; width:9px; height:6px; border-radius:50%; background:rgba(255,255,255,0.45); pointer-events:none; }
+  #page-drum .klbl{ font-size:clamp(6px,1.6vw,8px); color:var(--text-soft); letter-spacing:2px; text-transform:uppercase; }
+  #page-drum .kval{ font-size:clamp(5px,1.4vw,7px); color:var(--text-faint); font-family:monospace; }
+  #page-drum #pad-wrap{ flex:1; min-height:0; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:8px; }
+  #page-drum .pad{ position:relative; border-radius:14px; border:1.5px solid var(--warm-tan); background:var(--cream); box-shadow:0 5px 16px var(--shadow), 0 1px 3px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.82), inset 0 -2px 0 var(--shadow); cursor:pointer; touch-action:none; overflow:hidden; transition:background .06s, box-shadow .06s, border-color .06s, transform .07s; -webkit-tap-highlight-color:transparent; }
+  #page-drum .pad::before{ content:''; position:absolute; top:0; left:0; right:0; height:42%; background:linear-gradient(to bottom,rgba(255,255,255,0.58),transparent); border-radius:14px 14px 0 0; pointer-events:none; }
+  #page-drum .pad::after{ content:''; position:absolute; bottom:0; left:0; right:0; height:5px; background:linear-gradient(to bottom,transparent,var(--shadow)); border-radius:0 0 14px 14px; pointer-events:none; transition:opacity .06s; }
+  #page-drum .pad.hit{ background:var(--parchment); border-color:var(--biscuit); transform:scale(0.962) translateY(2px); box-shadow:0 1px 6px var(--shadow), inset 0 3px 10px var(--shadow-deep), inset 0 1px 0 var(--parchment); }
+  #page-drum .pad.hit::after{ opacity:0; }
+  #page-drum .ripple{ position:absolute; border-radius:50%; background:var(--accent-lt); transform:scale(0); animation:md-rip .5s ease-out forwards; pointer-events:none; }
+  @keyframes md-rip{ to{ transform:scale(5); opacity:0; } }
+  #page-drum #save-btn{ height:32px; padding:0 10px; flex-shrink:0; background:var(--parchment); border:1px solid var(--warm-tan); border-radius:8px; font-family:'Lato',sans-serif; font-size:16px; line-height:1; color:var(--brown); cursor:pointer; box-shadow:0 1px 4px var(--shadow); transition:background .12s, border-color .12s; }
+  #page-drum #save-btn:hover{ background:var(--cream); border-color:var(--biscuit); }
+  #page-drum #save-form{ display:flex; align-items:center; gap:5px; flex-shrink:0; }
+  #page-drum #preset-name{ height:32px; padding:0 9px; border-radius:8px; border:1px solid var(--biscuit); background:var(--cream); font-family:'Lato',sans-serif; font-size:11px; color:var(--espresso); width:140px; outline:none; }
+  #page-drum #preset-name:focus{ border-color:var(--brown); }
+  #page-drum #preset-confirm, #page-drum #preset-cancel{ height:32px; padding:0 10px; border-radius:8px; cursor:pointer; font-family:'Lato',sans-serif; font-size:10px; letter-spacing:1px; border:1px solid var(--warm-tan); box-shadow:0 1px 3px var(--shadow); }
+  #page-drum #preset-confirm{ background:var(--brown); color:var(--cream); border-color:var(--brown); }
+  #page-drum #preset-cancel{ background:var(--parchment); color:var(--text-soft); }
+  @media (orientation:landscape){
+    #page-drum #app{ gap:4px; padding-top:4px; padding-bottom:5px; }
+    #page-drum #header{ height:34px; }
+    #page-drum .logo-sub{ display:none; }
+    #page-drum .logo-title{ font-size:clamp(13px,2.8vw,19px); }
+    #page-drum #knob-strip{ padding:4px 12px 6px; gap:8px; }
+    #page-drum .kbody{ width:34px; height:34px; }
+    #page-drum .kneedle{ width:2px; height:10px; }
+    #page-drum .kgloss{ top:5px; left:8px; width:7px; height:5px; }
+    #page-drum .kval{ display:none; }
+    #page-drum .kgrp-lbl{ font-size:clamp(4px,1.1vw,6px); }
+    #page-drum .krow{ gap:8px; }
+    #page-drum #pad-wrap{ gap:6px; }
+  }
 
   /* ════ PAGE: KEYS — MegaSynth (ported from original, scoped + ms- prefixed) ════ */
   :root[data-page="keys"] .chrome-top{ display:none; }            /* auto-hide transport on Keys */
@@ -240,8 +286,47 @@
     </div>
 
     <div class="page" id="page-drum">
-      <div class="md-head"><div class="md-logo">MicroDrum</div><div class="md-sub">Drum Machine</div></div>
-      <div class="dpads" id="dpads"></div>
+      <div id="app">
+        <div id="header">
+          <div>
+            <div class="logo-title">MicroDrum</div>
+            <div class="logo-sub">Drum Machine</div>
+          </div>
+          <div id="scope-wrap"><canvas id="scope"></canvas><div id="scope-idle">tap a pad</div></div>
+          <div id="kit-wrap">
+            <select id="kit-select">
+              <option value="acoustic">Acoustic Kit</option>
+              <option value="stage2">Stage 2 Kit</option>
+              <option value="rock">Rock Kit</option>
+              <option value="newwave">New Wave Kit</option>
+              <option value="punk">Punk Kit</option>
+              <option value="jazz">Jazz Kit</option>
+              <option value="pop">Pop Kit</option>
+              <option value="techno">Techno Kit</option>
+              <option value="stage">Stage Kit</option>
+              <option value="electric">Electric Kit</option>
+            </select>
+            <div id="kit-arrow"></div>
+          </div>
+          <button id="save-btn" title="Save current knobs as a preset">＋</button>
+          <div id="save-form" style="display:none;">
+            <input id="preset-name" type="text" placeholder="Preset name…" maxlength="24" autocomplete="off" spellcheck="false">
+            <button id="preset-confirm">SAVE</button>
+            <button id="preset-cancel">✕</button>
+          </div>
+        </div>
+        <div id="knob-strip"></div>
+        <div id="pad-wrap">
+          <div class="pad" data-pad="tone-hi"></div>
+          <div class="pad" data-pad="tone-mid"></div>
+          <div class="pad" data-pad="tone-lo"></div>
+          <div class="pad" data-pad="hh-open"></div>
+          <div class="pad" data-pad="kick"></div>
+          <div class="pad" data-pad="snare"></div>
+          <div class="pad" data-pad="cymbal"></div>
+          <div class="pad" data-pad="hh-closed"></div>
+        </div>
+      </div>
     </div>
 
     <div class="page" id="page-keys">
@@ -544,33 +629,2565 @@ let hintHidden=false;
 function hideHint(){ if(hintHidden) return; hintHidden=true; hint.style.opacity='0'; }
 
 /* ════════════════════════════════════════════════════════════
-   PAGE: DRUMS — live stub (MicroDrum palette). Plays via shared bus.
+   PAGE: DRUMS — MicroDrum engine, ported from the original.
+   Closure-wrapped; original IDs kept (collision-free); voices -> Suite.master.
    ════════════════════════════════════════════════════════════ */
-function dClap(t,out){ const ctx=Suite.ctx;
-  [0,0.012,0.026].forEach((off,i)=>{ const n=ctx.createBufferSource(); n.buffer=noiseBuf(ctx,0.06);
-    const bp=ctx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=1400; bp.Q.value=1.2;
-    const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t+off); g.gain.exponentialRampToValueAtTime(0.5*(i===2?1:0.7),t+off+0.002); g.gain.exponentialRampToValueAtTime(0.0001,t+off+0.05);
-    n.connect(bp).connect(g).connect(out); n.start(t+off); n.stop(t+off+0.07); }); }
-function dTom(t,out){ const ctx=Suite.ctx; const o=ctx.createOscillator(); o.type='sine';
-  o.frequency.setValueAtTime(180,t); o.frequency.exponentialRampToValueAtTime(90,t+0.18);
-  const g=ctx.createGain(); g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.7,t+0.005); g.gain.exponentialRampToValueAtTime(0.0001,t+0.25);
-  o.connect(g).connect(out); o.start(t); o.stop(t+0.27); }
+(function(){
 
-const DPADS=[
-  ['Kick',(t,o)=>playKick(t,o)],
-  ['Snare',(t,o)=>playSnare(t,o)],
-  ['Hat',(t,o)=>playHat(t,false,o)],
-  ['Open Hat',(t,o)=>playHat(t,true,o)],
-  ['Clap',(t,o)=>dClap(t,o)],
-  ['Tom',(t,o)=>dTom(t,o)],
+'use strict';
+
+/* ═════════════════════════════════════
+   STATE
+═════════════════════════════════════ */
+let actx = null, masterGain = null, reverbConv = null,
+    reverbWet = null, analyser = null;
+let currentKit = 'acoustic';
+
+/* live params — knobs write here, synth reads here */
+const P = {
+  reverb:  0.28,   // 0..1   wet reverb mix
+  decay:   1.0,    // 0..1   global decay multiplier
+  tone:    0.72,   // 0..1   lowpass cutoff (0=dark,1=bright)
+  attack:  0.5,    // 0..1   transient punch (0=soft,1=snappy)
+  drive:   0.18,   // 0..1   saturation/waveshaper amount
+  volume:  0.82,   // 0..1   master volume
+};
+
+/* ═════════════════════════════════════
+   KNOB DEFINITIONS
+═════════════════════════════════════ */
+const KNOB_GROUPS = [
+  { lbl: 'SHAPE', knobs: [
+    { p:'attack',  l:'ATK',  min:0,   max:1, v:0.5  },
+    { p:'decay',   l:'DEC',  min:0.2, max:2, v:1.0  },
+  ]},
+  { lbl: 'TONE', knobs: [
+    { p:'tone',    l:'TONE', min:0,   max:1, v:0.72 },
+    { p:'drive',   l:'DRIV', min:0,   max:1, v:0.18 },
+  ]},
+  { lbl: 'SPACE', knobs: [
+    { p:'reverb',  l:'REV',  min:0,   max:1, v:0.28 },
+  ]},
+  { lbl: 'MIX', knobs: [
+    { p:'volume',  l:'VOL',  min:0,   max:1, v:0.82 },
+  ]},
 ];
-const dpadsEl=document.getElementById('dpads');
-DPADS.forEach(([name,fn])=>{
-  const p=document.createElement('div'); p.className='dpad';
-  p.addEventListener('pointerdown',e=>{ e.preventDefault(); Suite.ensureAudio();
-    fn(Suite.ctx.currentTime, Suite.master); p.classList.add('hit'); setTimeout(()=>p.classList.remove('hit'),90); });
-  dpadsEl.appendChild(p);
+
+/* ═════════════════════════════════════
+   AUDIO BOOT
+═════════════════════════════════════ */
+function bootAudio() {
+  if (actx) { actx.resume(); return; }
+  Suite.ensureAudio(); actx = Suite.ctx;
+
+  masterGain = actx.createGain();
+  masterGain.gain.value = P.volume;
+
+  /* waveshaper for drive */
+  const shaper = actx.createWaveShaper();
+  shaper.curve = makeDriveCurve(P.drive);
+  shaper.oversample = '4x';
+  actx._shaper = shaper;
+
+  /* global tone filter */
+  const toneFilter = actx.createBiquadFilter();
+  toneFilter.type = 'lowpass';
+  toneFilter.frequency.value = toneToHz(P.tone);
+  toneFilter.Q.value = 0.5;
+  actx._tone = toneFilter;
+
+  /* compressor */
+  const comp = actx.createDynamicsCompressor();
+  comp.threshold.value = -6; comp.knee.value = 4;
+  comp.ratio.value = 6; comp.attack.value = .003; comp.release.value = .18;
+
+  /* reverb */
+  reverbConv = actx.createConvolver();
+  buildReverb();
+  reverbWet = actx.createGain(); reverbWet.gain.value = P.reverb;
+  const reverbDry = actx.createGain(); reverbDry.gain.value = 1;
+
+  /* analyser */
+  analyser = actx.createAnalyser(); analyser.fftSize = 1024;
+
+  /* routing:
+     masterGain → shaper → toneFilter → comp → analyser → out
+                                      ↘ reverbWet → reverbConv → comp
+  */
+  masterGain.connect(shaper);
+  shaper.connect(toneFilter);
+  toneFilter.connect(comp);
+  toneFilter.connect(reverbWet);
+  reverbWet.connect(reverbConv);
+  reverbConv.connect(comp);
+  comp.connect(analyser);
+  analyser.connect(Suite.master);
+
+  document.getElementById('scope-idle').style.display = 'none';
+  startScope();
+}
+
+function buildReverb() {
+  const sr = actx.sampleRate;
+  const len = Math.floor(sr * 2.4);
+  const ib = actx.createBuffer(2, len, sr);
+  for (let c = 0; c < 2; c++) {
+    const d = ib.getChannelData(c);
+    for (let i = 0; i < len; i++) d[i] = (Math.random()*2-1) * Math.pow(1 - i/len, 1.55);
+  }
+  reverbConv.buffer = ib;
+}
+
+function toneToHz(v) {
+  /* v=0 → 400Hz, v=1 → 18000Hz (exponential feel) */
+  return 400 * Math.pow(45, v);
+}
+
+function makeDriveCurve(amount) {
+  const n = 256, curve = new Float32Array(n);
+  const k = amount * 80 + 1;
+  for (let i = 0; i < n; i++) {
+    const x = (i * 2) / n - 1;
+    curve[i] = (Math.PI + k) * x / (Math.PI + k * Math.abs(x));
+  }
+  return curve;
+}
+
+/* ═════════════════════════════════════
+   SHARED UTILITY — attack shaping
+═════════════════════════════════════ */
+function applyAttack(gainNode, v, t) {
+  /* P.attack 0→soft (slow rise), 1→punchy (instant) */
+  const riseTime = 0.001 + (1 - P.attack) * 0.025;
+  gainNode.gain.setValueAtTime(0.0001, t);
+  gainNode.gain.exponentialRampToValueAtTime(v, t + riseTime);
+  return riseTime;
+}
+
+function decScale(base) { return base * (0.3 + P.decay * 0.9); }
+
+/* ═════════════════════════════════════
+   STAGE KIT  (formerly Acoustic)
+═════════════════════════════════════ */
+const stage = {
+  kick(t, v) {
+    const dec = decScale(0.55);
+    const sub = actx.createOscillator();
+    const env = actx.createGain();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(82, t);
+    sub.frequency.exponentialRampToValueAtTime(28, t + 0.12 * P.decay);
+    const rise = applyAttack(env, v, t);
+    env.gain.exponentialRampToValueAtTime(0.001, t + rise + dec);
+    sub.connect(env); env.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + rise + 0.05);
+
+    const mid = actx.createOscillator();
+    const me = actx.createGain();
+    mid.type = 'triangle';
+    mid.frequency.setValueAtTime(140, t);
+    mid.frequency.exponentialRampToValueAtTime(50, t + 0.06);
+    me.gain.setValueAtTime(v * 0.4, t);
+    me.gain.exponentialRampToValueAtTime(0.001, t + decScale(0.18));
+    mid.connect(me); me.connect(masterGain);
+    mid.start(t); mid.stop(t + decScale(0.2));
+
+    // beater click
+    const clen = Math.floor(actx.sampleRate * 0.025);
+    const cb = actx.createBuffer(1, clen, actx.sampleRate);
+    const cd = cb.getChannelData(0);
+    for (let i=0;i<clen;i++) cd[i]=(Math.random()*2-1)*(1-i/clen);
+    const cs = actx.createBufferSource(); cs.buffer = cb;
+    const cf = actx.createBiquadFilter(); cf.type='bandpass'; cf.frequency.value=3500; cf.Q.value=0.8;
+    const ce = actx.createGain();
+    ce.gain.setValueAtTime(v * (0.1 + P.attack * 0.35), t);
+    ce.gain.exponentialRampToValueAtTime(0.001, t + 0.022);
+    cs.connect(cf); cf.connect(ce); ce.connect(masterGain);
+    cs.start(t); cs.stop(t + 0.03);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.22);
+    const osc = actx.createOscillator();
+    const oe = actx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.setValueAtTime(200, t);
+    osc.frequency.exponentialRampToValueAtTime(100, t + 0.05);
+    const rise = applyAttack(oe, v * 0.5, t);
+    oe.gain.exponentialRampToValueAtTime(0.001, t + rise + dec * 0.5);
+    osc.connect(oe); oe.connect(masterGain);
+    osc.start(t); osc.stop(t + dec * 0.6);
+
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.06));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1400;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass';  lp.frequency.value=9000;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * 0.65, t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.05);
+    ns.connect(hp); hp.connect(lp); lp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.08);
+  },
+
+  'hh-closed'(t, v) {
+    const dec = decScale(0.048);
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.015));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=8000;
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.48, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.01);
+  },
+
+  'hh-open'(t, v) {
+    const dec = decScale(0.55);
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.1));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=5000;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=8500; bp.Q.value=0.4;
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.44, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(bp); bp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.05);
+  },
+
+  cymbal(t, v) {
+    const dec = decScale(0.9);
+    const freqs = [215, 335, 480, 620, 890, 1200, 1580];
+    freqs.forEach((f, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'square'; osc.frequency.value = f;
+      const d = dec - i * 0.05;
+      en.gain.setValueAtTime(v * 0.055, t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(d, 0.05));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + Math.max(d, 0.05) + 0.02);
+    });
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.1));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=5500;
+    const en2 = actx.createGain();
+    en2.gain.setValueAtTime(v * 0.22, t);
+    en2.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(en2); en2.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.05);
+  },
+
+  'tone-hi'(t,v)  { stage._tom(t,v,320,0.22); },
+  'tone-mid'(t,v) { stage._tom(t,v,220,0.30); },
+  'tone-lo'(t,v)  { stage._tom(t,v,155,0.40); },
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+    const osc = actx.createOscillator(); const en = actx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(base, t);
+    osc.frequency.exponentialRampToValueAtTime(base * 0.52, t + dec * 0.65);
+    const rise = applyAttack(en, v * 0.82, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + rise + dec);
+    osc.connect(en); en.connect(masterGain);
+    osc.start(t); osc.stop(t + dec + rise + 0.04);
+
+    const nlen = Math.floor(actx.sampleRate * dec * 0.4);
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=base*1.6; bp.Q.value=1.5;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * (0.1 + P.attack * 0.2), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.35);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec * 0.42);
+  },
+};
+
+/* ═════════════════════════════════════
+   TECHNO KIT  (formerly Acoustic attempt)
+═════════════════════════════════════ */
+const techno = {
+
+  kick(t, v) {
+    // Sub fundamental — deep, slow pitch drop
+    const dec = decScale(0.80);
+    const sub = actx.createOscillator();
+    const subE = actx.createGain();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(58, t);
+    sub.frequency.exponentialRampToValueAtTime(34, t + 0.10);
+    sub.frequency.exponentialRampToValueAtTime(28, t + 0.22 * P.decay);
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.92, t + 0.004);
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.06);
+
+    // Body layer — warm triangle adds punch without harshness
+    const body = actx.createOscillator();
+    const bodyE = actx.createGain();
+    body.type = 'triangle';
+    body.frequency.setValueAtTime(115, t);
+    body.frequency.exponentialRampToValueAtTime(52, t + 0.07);
+    bodyE.gain.setValueAtTime(0.0001, t);
+    bodyE.gain.exponentialRampToValueAtTime(v * 0.42, t + 0.003);
+    bodyE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.48);
+    body.connect(bodyE); bodyE.connect(masterGain);
+    body.start(t); body.stop(t + dec * 0.52);
+
+    // Beater thump — short band-filtered noise burst
+    const blen = Math.floor(actx.sampleRate * 0.045);
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i = 0; i < blen; i++) bd[i] = (Math.random() * 2 - 1);
+    const bs = actx.createBufferSource(); bs.buffer = bb;
+    const bf1 = actx.createBiquadFilter(); bf1.type='lowpass';  bf1.frequency.value = 2200;
+    const bf2 = actx.createBiquadFilter(); bf2.type='highpass'; bf2.frequency.value = 350;
+    const beE = actx.createGain();
+    beE.gain.setValueAtTime(v * (0.18 + P.attack * 0.42), t);
+    beE.gain.exponentialRampToValueAtTime(0.001, t + 0.038);
+    bs.connect(bf1); bf1.connect(bf2); bf2.connect(beE); beE.connect(masterGain);
+    bs.start(t); bs.stop(t + 0.05);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.30);
+
+    // Head tone — woody mid-frequency thud
+    const osc1 = actx.createOscillator();
+    const oe1 = actx.createGain();
+    osc1.type = 'triangle';
+    osc1.frequency.setValueAtTime(180, t);
+    osc1.frequency.exponentialRampToValueAtTime(135, t + 0.045);
+    oe1.gain.setValueAtTime(0.0001, t);
+    oe1.gain.exponentialRampToValueAtTime(v * 0.52, t + 0.0025);
+    oe1.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.42);
+    osc1.connect(oe1); oe1.connect(masterGain);
+    osc1.start(t); osc1.stop(t + dec * 0.48);
+
+    // Shell ring — higher mode adds crack
+    const osc2 = actx.createOscillator();
+    const oe2 = actx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(295, t);
+    osc2.frequency.exponentialRampToValueAtTime(215, t + 0.03);
+    oe2.gain.setValueAtTime(0.0001, t);
+    oe2.gain.exponentialRampToValueAtTime(v * 0.20, t + 0.0018);
+    oe2.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.28);
+    osc2.connect(oe2); oe2.connect(masterGain);
+    osc2.start(t); osc2.stop(t + dec * 0.32);
+
+    // Snare wires — broadband noise shaped by HP + LP
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.09));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value = 1100;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass';  lp.frequency.value = 11000;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * 0.75, t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.06);
+    ns.connect(hp); hp.connect(lp); lp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.10);
+
+    // Rimshot transient — sharp bandpass crack
+    const clen = Math.floor(actx.sampleRate * 0.014);
+    const cb = actx.createBuffer(1, clen, actx.sampleRate);
+    const cd = cb.getChannelData(0);
+    for (let i = 0; i < clen; i++) cd[i] = (Math.random() * 2 - 1) * (1 - i / clen);
+    const cs = actx.createBufferSource(); cs.buffer = cb;
+    const cf = actx.createBiquadFilter(); cf.type='bandpass'; cf.frequency.value = 4200; cf.Q.value = 0.7;
+    const ceE = actx.createGain();
+    ceE.gain.setValueAtTime(v * (0.10 + P.attack * 0.40), t);
+    ceE.gain.exponentialRampToValueAtTime(0.001, t + 0.018);
+    cs.connect(cf); cf.connect(ceE); ceE.connect(masterGain);
+    cs.start(t); cs.stop(t + 0.022);
+  },
+
+  'hh-closed'(t, v) {
+    // Inharmonic metallic partials — real cymbal frequency ratios
+    const dec = decScale(0.042);
+    const baseF = 455;
+    const ratios = [1, 2.756, 3.612, 4.831, 6.124, 7.945];
+    ratios.forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'square'; osc.frequency.value = baseF * r;
+      en.gain.setValueAtTime(v * 0.030 * Math.pow(0.70, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(dec * (1 - i * 0.10), 0.008));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec + 0.012);
+    });
+    // Metallic noise sheen
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.015));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value = 9500;
+    const nE = actx.createGain();
+    nE.gain.setValueAtTime(v * 0.38, t);
+    nE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(nE); nE.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.012);
+  },
+
+  'hh-open'(t, v) {
+    const dec = decScale(0.70);
+    const baseF = 455;
+    const ratios = [1, 2.756, 3.612, 4.831, 6.124, 7.945];
+    ratios.forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'square'; osc.frequency.value = baseF * r;
+      en.gain.setValueAtTime(v * 0.026 * Math.pow(0.72, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(dec * (1 - i * 0.07), 0.04));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec + 0.05);
+    });
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.12));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value = 6500;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value = 10500; bp.Q.value = 0.45;
+    const nE = actx.createGain();
+    nE.gain.setValueAtTime(v * 0.44, t);
+    nE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(bp); bp.connect(nE); nE.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.06);
+  },
+
+  cymbal(t, v) {
+    // Crash — dense inharmonic stack with long metallic wash
+    const dec = decScale(1.25);
+    const freqs = [174, 275, 438, 596, 815, 1065, 1390, 1760, 2210];
+    freqs.forEach((f, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = i < 4 ? 'sawtooth' : 'square';
+      osc.frequency.value = f;
+      const d = dec * (1 - i * 0.055);
+      en.gain.setValueAtTime(v * 0.040 * Math.pow(0.84, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(d, 0.07));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + Math.max(d, 0.09));
+    });
+    // Washy broadband layer
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.25));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value = 4200;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value = 7800; bp.Q.value = 0.32;
+    const nE = actx.createGain();
+    nE.gain.setValueAtTime(v * 0.30, t);
+    nE.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.18);
+    ns.connect(hp); hp.connect(bp); bp.connect(nE); nE.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.22);
+  },
+
+  'tone-hi'(t,v)  { techno._tom(t, v, 255, 0.20); },  // hi tom
+  'tone-mid'(t,v) { techno._tom(t, v, 182, 0.28); },  // mid tom
+  'tone-lo'(t,v)  { techno._tom(t, v, 126, 0.44); },  // floor tom
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+
+    // Head fundamental — sine with natural pitch descent
+    const osc = actx.createOscillator(); const en = actx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(base, t);
+    osc.frequency.exponentialRampToValueAtTime(base * 0.54, t + dec * 0.72);
+    en.gain.setValueAtTime(0.0001, t);
+    en.gain.exponentialRampToValueAtTime(v * 0.88, t + 0.004);
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    osc.connect(en); en.connect(masterGain);
+    osc.start(t); osc.stop(t + dec + 0.04);
+
+    // Shell resonance — detuned triangle overtone
+    const osc2 = actx.createOscillator(); const en2 = actx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(base * 1.62, t);
+    osc2.frequency.exponentialRampToValueAtTime(base * 0.90, t + dec * 0.5);
+    en2.gain.setValueAtTime(0.0001, t);
+    en2.gain.exponentialRampToValueAtTime(v * 0.26, t + 0.002);
+    en2.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.38);
+    osc2.connect(en2); en2.connect(masterGain);
+    osc2.start(t); osc2.stop(t + dec * 0.42);
+
+    // Stick attack — bandpass-shaped noise burst
+    const nlen = Math.floor(actx.sampleRate * dec * 0.32);
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value = base * 2.4; bp.Q.value = 1.4;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass';  lp.frequency.value = base * 4.5;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * (0.14 + P.attack * 0.24), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.26);
+    ns.connect(bp); bp.connect(lp); lp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec * 0.30);
+  },
+};
+
+/* ═════════════════════════════════════
+   POP KIT  (formerly Acoustic attempt)
+═════════════════════════════════════ */
+const pop = {
+
+  kick(t, v) {
+    const dec = decScale(0.52);
+
+    // Round sub — all sine, slow gentle pitch drop
+    const sub = actx.createOscillator();
+    const subE = actx.createGain();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(52, t);
+    sub.frequency.exponentialRampToValueAtTime(36, t + 0.09 * P.decay);
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.70, t + 0.008); // slower attack = rounder
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.05);
+
+    // Warm mid body — sine, lower gain
+    const body = actx.createOscillator();
+    const bodyE = actx.createGain();
+    body.type = 'sine';
+    body.frequency.setValueAtTime(85, t);
+    body.frequency.exponentialRampToValueAtTime(45, t + 0.06);
+    bodyE.gain.setValueAtTime(0.0001, t);
+    bodyE.gain.exponentialRampToValueAtTime(v * 0.28, t + 0.006);
+    bodyE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.42);
+    body.connect(bodyE); bodyE.connect(masterGain);
+    body.start(t); body.stop(t + dec * 0.46);
+
+    // Minimal soft beater — very low-passed noise, barely audible thud
+    const blen = Math.floor(actx.sampleRate * 0.022);
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i = 0; i < blen; i++) bd[i] = (Math.random() * 2 - 1) * (1 - i / blen);
+    const bs = actx.createBufferSource(); bs.buffer = bb;
+    const bf = actx.createBiquadFilter(); bf.type = 'lowpass'; bf.frequency.value = 700;
+    const beE = actx.createGain();
+    beE.gain.setValueAtTime(v * (0.06 + P.attack * 0.15), t);
+    beE.gain.exponentialRampToValueAtTime(0.001, t + 0.020);
+    bs.connect(bf); bf.connect(beE); beE.connect(masterGain);
+    bs.start(t); bs.stop(t + 0.026);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.20);
+
+    // Warm head tone — sine, round onset
+    const osc1 = actx.createOscillator();
+    const oe1 = actx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(160, t);
+    osc1.frequency.exponentialRampToValueAtTime(125, t + 0.038);
+    oe1.gain.setValueAtTime(0.0001, t);
+    oe1.gain.exponentialRampToValueAtTime(v * 0.40, t + 0.005);
+    oe1.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.48);
+    osc1.connect(oe1); oe1.connect(masterGain);
+    osc1.start(t); osc1.stop(t + dec * 0.52);
+
+    // Soft shell warmth — triangle, very quiet
+    const osc2 = actx.createOscillator();
+    const oe2 = actx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(248, t);
+    osc2.frequency.exponentialRampToValueAtTime(190, t + 0.025);
+    oe2.gain.setValueAtTime(0.0001, t);
+    oe2.gain.exponentialRampToValueAtTime(v * 0.11, t + 0.003);
+    oe2.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.25);
+    osc2.connect(oe2); oe2.connect(masterGain);
+    osc2.start(t); osc2.stop(t + dec * 0.28);
+
+    // Snare wire rattle — warm, mid-only noise (not harsh)
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.055));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 900;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 6000; // warmer than techno
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * 0.46, t); // softer rattle
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.04);
+    ns.connect(hp); hp.connect(lp); lp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.07);
+  },
+
+  'hh-closed'(t, v) {
+    // Soft clean tick — band-limited noise, no harsh top
+    const dec = decScale(0.030);
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.010));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 5500;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 13000; // cap the top end
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.28, t); // quiet
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(lp); lp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.010);
+
+    // Soft body tap — low sine, very brief
+    const osc = actx.createOscillator(); const oe = actx.createGain();
+    osc.type = 'sine'; osc.frequency.value = 1100;
+    oe.gain.setValueAtTime(v * 0.05, t);
+    oe.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.55);
+    osc.connect(oe); oe.connect(masterGain);
+    osc.start(t); osc.stop(t + dec * 0.6);
+  },
+
+  'hh-open'(t, v) {
+    // Airy, warm open hi-hat — band-limited sizzle
+    const dec = decScale(0.48);
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.08));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 4200;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 11000; // softer top
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.34, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(lp); lp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.05);
+  },
+
+  cymbal(t, v) {
+    // Gentle crash/ride — triangle oscillators for softness, not square
+    const dec = decScale(0.90);
+    const freqs = [218, 340, 508, 695, 932, 1220];
+    freqs.forEach((f, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'triangle'; // much softer harmonic content than square
+      osc.frequency.value = f;
+      const d = dec * (1 - i * 0.055);
+      en.gain.setValueAtTime(v * 0.034 * Math.pow(0.76, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(d, 0.06));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + Math.max(d, 0.08));
+    });
+    // Soft noise wash, band-limited so it's not harsh
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.14));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 3600;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 8500;
+    const nE = actx.createGain();
+    nE.gain.setValueAtTime(v * 0.16, t); // restrained — not washy
+    nE.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.10);
+    ns.connect(hp); hp.connect(lp); lp.connect(nE); nE.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.14);
+  },
+
+  'tone-hi'(t,v)  { pop._tom(t, v, 235, 0.18); }, // hi tom
+  'tone-mid'(t,v) { pop._tom(t, v, 170, 0.26); }, // mid tom
+  'tone-lo'(t,v)  { pop._tom(t, v, 118, 0.40); }, // floor tom
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+
+    // Pure round sine — slow onset, natural pitch settle
+    const osc = actx.createOscillator(); const en = actx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(base, t);
+    osc.frequency.exponentialRampToValueAtTime(base * 0.62, t + dec * 0.78); // gentle, not aggressive
+    en.gain.setValueAtTime(0.0001, t);
+    en.gain.exponentialRampToValueAtTime(v * 0.80, t + 0.007); // slower = rounder onset
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    osc.connect(en); en.connect(masterGain);
+    osc.start(t); osc.stop(t + dec + 0.04);
+
+    // Warm overtone — sine, very quiet
+    const osc2 = actx.createOscillator(); const en2 = actx.createGain();
+    osc2.type = 'sine'; // sine not triangle — keeps it soft
+    osc2.frequency.setValueAtTime(base * 1.50, t);
+    osc2.frequency.exponentialRampToValueAtTime(base * 0.88, t + dec * 0.44);
+    en2.gain.setValueAtTime(0.0001, t);
+    en2.gain.exponentialRampToValueAtTime(v * 0.14, t + 0.004);
+    en2.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.32);
+    osc2.connect(en2); en2.connect(masterGain);
+    osc2.start(t); osc2.stop(t + dec * 0.36);
+
+    // Barely-there stick tap — narrow bandpass, very low gain
+    const nlen = Math.floor(actx.sampleRate * dec * 0.20);
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const bp = actx.createBiquadFilter(); bp.type = 'bandpass'; bp.frequency.value = base * 1.9; bp.Q.value = 2.0;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * (0.05 + P.attack * 0.10), t); // very soft
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.16);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec * 0.20);
+  },
+};
+
+/* ═════════════════════════════════════
+   ELECTRIC KIT
+═════════════════════════════════════ */
+const electric = {
+  kick(t, v) {
+    const dec = decScale(0.38);
+    const osc = actx.createOscillator(); const en = actx.createGain();
+    osc.frequency.setValueAtTime(160, t);
+    osc.frequency.exponentialRampToValueAtTime(40, t + 0.07);
+    const rise = applyAttack(en, v, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + rise + dec);
+    osc.connect(en); en.connect(masterGain);
+    osc.start(t); osc.stop(t + dec + rise + 0.04);
+
+    const ck = actx.createOscillator(); const ce = actx.createGain();
+    ck.type='square'; ck.frequency.value=800;
+    ce.gain.setValueAtTime(v * (0.15 + P.attack * 0.25), t);
+    ce.gain.exponentialRampToValueAtTime(0.001, t + 0.015);
+    ck.connect(ce); ce.connect(masterGain);
+    ck.start(t); ck.stop(t + 0.02);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.18);
+    const osc = actx.createOscillator(); const oe = actx.createGain();
+    osc.frequency.setValueAtTime(220,t); osc.frequency.exponentialRampToValueAtTime(90,t+0.05);
+    const rise = applyAttack(oe, v * 0.55, t);
+    oe.gain.exponentialRampToValueAtTime(0.001, t + rise + dec * 0.6);
+    osc.connect(oe); oe.connect(masterGain);
+    osc.start(t); osc.stop(t + dec * 0.7);
+
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.04));
+    const nb = actx.createBuffer(1,nlen,actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for(let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns = actx.createBufferSource(); ns.buffer=nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1800;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v*0.7,t); ne.gain.exponentialRampToValueAtTime(0.001,t+dec+0.04);
+    ns.connect(hp); hp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t+dec+0.06);
+  },
+
+  'hh-closed'(t,v) {
+    const dec = decScale(0.055);
+    const nlen = Math.floor(actx.sampleRate*(dec+0.01));
+    const nb=actx.createBuffer(1,nlen,actx.sampleRate);
+    const nd=nb.getChannelData(0);
+    for(let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns=actx.createBufferSource(); ns.buffer=nb;
+    const hp=actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
+    const en=actx.createGain();
+    en.gain.setValueAtTime(v*0.55,t); en.gain.exponentialRampToValueAtTime(0.001,t+dec);
+    ns.connect(hp); hp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t+dec+0.01);
+  },
+
+  'hh-open'(t,v) {
+    const dec=decScale(0.48);
+    const nlen=Math.floor(actx.sampleRate*(dec+0.07));
+    const nb=actx.createBuffer(1,nlen,actx.sampleRate);
+    const nd=nb.getChannelData(0);
+    for(let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns=actx.createBufferSource(); ns.buffer=nb;
+    const hp=actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=5500;
+    const bp=actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=9000; bp.Q.value=0.5;
+    const en=actx.createGain();
+    en.gain.setValueAtTime(v*0.5,t); en.gain.exponentialRampToValueAtTime(0.001,t+dec);
+    ns.connect(hp); hp.connect(bp); bp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t+dec+0.05);
+  },
+
+  cymbal(t,v) {
+    const dec=decScale(0.6);
+    const freqs=[205,310,435,590,845,1100];
+    freqs.forEach((f,i)=>{
+      const osc=actx.createOscillator(); const en=actx.createGain();
+      osc.type='square'; osc.frequency.value=f;
+      const d=dec-i*0.04;
+      en.gain.setValueAtTime(v*0.06,t); en.gain.exponentialRampToValueAtTime(0.001,t+Math.max(d,0.04));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t+Math.max(d,0.04)+0.02);
+    });
+    const nlen=Math.floor(actx.sampleRate*(dec+0.1));
+    const nb=actx.createBuffer(1,nlen,actx.sampleRate);
+    const nd=nb.getChannelData(0);
+    for(let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+    const ns=actx.createBufferSource(); ns.buffer=nb;
+    const hp=actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=6000;
+    const en2=actx.createGain();
+    en2.gain.setValueAtTime(v*0.25,t); en2.gain.exponentialRampToValueAtTime(0.001,t+dec);
+    ns.connect(hp); hp.connect(en2); en2.connect(masterGain);
+    ns.start(t); ns.stop(t+dec+0.05);
+  },
+
+  'tone-hi'(t,v)  { electric._tom(t,v,320,0.22); },
+  'tone-mid'(t,v) { electric._tom(t,v,220,0.30); },
+  'tone-lo'(t,v)  { electric._tom(t,v,155,0.40); },
+
+  _tom(t,v,base,baseDec) {
+    const dec=decScale(baseDec);
+    const osc=actx.createOscillator(); const en=actx.createGain();
+    osc.frequency.setValueAtTime(base,t);
+    osc.frequency.exponentialRampToValueAtTime(base*0.5,t+dec*0.6);
+    const rise=applyAttack(en,v*0.75,t);
+    en.gain.exponentialRampToValueAtTime(0.001,t+rise+dec);
+    osc.connect(en); en.connect(masterGain);
+    osc.start(t); osc.stop(t+dec+rise+0.04);
+  },
+};
+
+/* ═════════════════════════════════════
+   JAZZ KIT  (jazz · country · bluegrass)
+═════════════════════════════════════ */
+const jazz = {
+
+  kick(t, v) {
+    const dec = decScale(0.58);
+    // Deep round fundamental — sine only, blooms slowly
+    const sub = actx.createOscillator(); const subE = actx.createGain();
+    sub.type = 'sine';
+    sub.frequency.setValueAtTime(48, t);
+    sub.frequency.exponentialRampToValueAtTime(34, t + 0.11 * P.decay);
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.65, t + 0.012); // 12ms = very round
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.05);
+
+    // Warm body sine — adds presence without hardness
+    const body = actx.createOscillator(); const bodyE = actx.createGain();
+    body.type = 'sine';
+    body.frequency.setValueAtTime(80, t);
+    body.frequency.exponentialRampToValueAtTime(42, t + 0.07);
+    bodyE.gain.setValueAtTime(0.0001, t);
+    bodyE.gain.exponentialRampToValueAtTime(v * 0.24, t + 0.008);
+    bodyE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.40);
+    body.connect(bodyE); bodyE.connect(masterGain);
+    body.start(t); body.stop(t + dec * 0.44);
+
+    // Barely-there felt beater — LP'd to 600 Hz, almost inaudible
+    const blen = Math.floor(actx.sampleRate * 0.018);
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i = 0; i < blen; i++) bd[i] = (Math.random() * 2 - 1) * (1 - i / blen);
+    const bs = actx.createBufferSource(); bs.buffer = bb;
+    const bf = actx.createBiquadFilter(); bf.type = 'lowpass'; bf.frequency.value = 580;
+    const beE = actx.createGain();
+    beE.gain.setValueAtTime(v * (0.04 + P.attack * 0.10), t);
+    beE.gain.exponentialRampToValueAtTime(0.001, t + 0.016);
+    bs.connect(bf); bf.connect(beE); beE.connect(masterGain);
+    bs.start(t); bs.stop(t + 0.022);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.18);
+    // Warm woody head — sine, very gentle onset
+    const osc1 = actx.createOscillator(); const oe1 = actx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(148, t);
+    osc1.frequency.exponentialRampToValueAtTime(118, t + 0.035);
+    oe1.gain.setValueAtTime(0.0001, t);
+    oe1.gain.exponentialRampToValueAtTime(v * 0.36, t + 0.006);
+    oe1.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.46);
+    osc1.connect(oe1); oe1.connect(masterGain);
+    osc1.start(t); osc1.stop(t + dec * 0.50);
+
+    // Ghost shell — very quiet triangle
+    const osc2 = actx.createOscillator(); const oe2 = actx.createGain();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(238, t);
+    osc2.frequency.exponentialRampToValueAtTime(185, t + 0.022);
+    oe2.gain.setValueAtTime(0.0001, t);
+    oe2.gain.exponentialRampToValueAtTime(v * 0.08, t + 0.004);
+    oe2.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.20);
+    osc2.connect(oe2); oe2.connect(masterGain);
+    osc2.start(t); osc2.stop(t + dec * 0.24);
+
+    // Loose snare wire rattle — warm, capped hard at 4500 Hz
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.05));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 820;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 4500;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * 0.38, t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.035);
+    ns.connect(hp); hp.connect(lp); lp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.06);
+  },
+
+  'hh-closed'(t, v) {
+    // Gentle tick — warm band, quiet
+    const dec = decScale(0.024);
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.008));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 4800;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 10500;
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.22, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(lp); lp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.008);
+
+    // Soft body tap sine
+    const osc = actx.createOscillator(); const oe = actx.createGain();
+    osc.type = 'sine'; osc.frequency.value = 980;
+    oe.gain.setValueAtTime(v * 0.04, t);
+    oe.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.5);
+    osc.connect(oe); oe.connect(masterGain);
+    osc.start(t); osc.stop(t + dec * 0.55);
+  },
+
+  'hh-open'(t, v) {
+    // Warm, airy sizzle — nothing harsh
+    const dec = decScale(0.42);
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.07));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 3800;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 9200;
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.28, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(lp); lp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.05);
+  },
+
+  cymbal(t, v) {
+    // Warm ride-like shimmer — triangle osc stack, very soft noise
+    const dec = decScale(0.85);
+    const freqs = [210, 325, 488, 668, 895, 1165];
+    freqs.forEach((f, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.value = f;
+      const d = dec * (1 - i * 0.052);
+      en.gain.setValueAtTime(v * 0.030 * Math.pow(0.74, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(d, 0.055));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + Math.max(d, 0.07));
+    });
+    // Restrained wash — narrow band, very quiet
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.12));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type = 'highpass'; hp.frequency.value = 3200;
+    const lp = actx.createBiquadFilter(); lp.type = 'lowpass';  lp.frequency.value = 7200;
+    const nE = actx.createGain();
+    nE.gain.setValueAtTime(v * 0.11, t);
+    nE.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.09);
+    ns.connect(hp); hp.connect(lp); lp.connect(nE); nE.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.13);
+  },
+
+  'tone-hi'(t,v)  { jazz._tom(t, v, 220, 0.17); },
+  'tone-mid'(t,v) { jazz._tom(t, v, 160, 0.24); },
+  'tone-lo'(t,v)  { jazz._tom(t, v, 110, 0.38); },
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+    // Pure sine — real tom heads are nearly sinusoidal
+    const osc = actx.createOscillator(); const en = actx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(base, t);
+    osc.frequency.exponentialRampToValueAtTime(base * 0.64, t + dec * 0.80);
+    en.gain.setValueAtTime(0.0001, t);
+    en.gain.exponentialRampToValueAtTime(v * 0.78, t + 0.009); // 9ms bloom
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    osc.connect(en); en.connect(masterGain);
+    osc.start(t); osc.stop(t + dec + 0.04);
+
+    // Subtle warm overtone — sine, very quiet
+    const osc2 = actx.createOscillator(); const en2 = actx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(base * 1.46, t);
+    osc2.frequency.exponentialRampToValueAtTime(base * 0.90, t + dec * 0.42);
+    en2.gain.setValueAtTime(0.0001, t);
+    en2.gain.exponentialRampToValueAtTime(v * 0.11, t + 0.005);
+    en2.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.30);
+    osc2.connect(en2); en2.connect(masterGain);
+    osc2.start(t); osc2.stop(t + dec * 0.34);
+
+    // Barely-there stick tap — narrow BP, very low gain
+    const nlen = Math.floor(actx.sampleRate * dec * 0.18);
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const bp = actx.createBiquadFilter(); bp.type = 'bandpass';
+    bp.frequency.value = base * 1.75; bp.Q.value = 2.2;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * (0.04 + P.attack * 0.08), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.14);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + dec * 0.18);
+  },
+};
+
+/* ═════════════════════════════════════
+   PUNK KIT
+═════════════════════════════════════ */
+const punk = {
+
+  kick(t, v) {
+    const dec = decScale(0.60);
+
+    // FM carrier — modulator sweeps pitch on impact like a real head
+    const mod = actx.createOscillator(); const modG = actx.createGain();
+    const car = actx.createOscillator(); const carG = actx.createGain();
+    mod.type = 'sine'; mod.frequency.value = 86;
+    modG.gain.setValueAtTime(86 * 3.2, t);
+    modG.gain.exponentialRampToValueAtTime(0.001, t + 0.050);
+    car.type = 'sine';
+    car.frequency.setValueAtTime(50, t);
+    car.frequency.exponentialRampToValueAtTime(36, t + 0.09 * P.decay);
+    carG.gain.setValueAtTime(0.0001, t);
+    carG.gain.exponentialRampToValueAtTime(v * 0.78, t + 0.007);
+    carG.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    mod.connect(modG); modG.connect(car.frequency);
+    car.connect(carG); carG.connect(masterGain);
+    mod.start(t); mod.stop(t + 0.08);
+    car.start(t); car.stop(t + dec + 0.06);
+
+    // Sub sine — weight under the FM body
+    const sub = actx.createOscillator(); const subE = actx.createGain();
+    sub.type = 'sine'; sub.frequency.value = 44;
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.40, t + 0.010);
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.88);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.05);
+
+    // Felt beater — bandpass impulse around 2.5 kHz, decays in 20ms
+    const blen = Math.floor(actx.sampleRate * 0.022);
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i = 0; i < blen; i++) bd[i] = (Math.random() * 2 - 1) * Math.exp(-i / (blen * 0.25));
+    const bs = actx.createBufferSource(); bs.buffer = bb;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2400; bp.Q.value=0.9;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass';  lp.frequency.value=4500;
+    const beE = actx.createGain();
+    beE.gain.setValueAtTime(v * (0.10 + P.attack * 0.22), t);
+    beE.gain.exponentialRampToValueAtTime(0.001, t + 0.020);
+    bs.connect(bp); bp.connect(lp); lp.connect(beE); beE.connect(masterGain);
+    bs.start(t); bs.stop(t + 0.026);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.20);
+
+    // Two beating sine tones — membrane has two coupled modes
+    // Their interference creates the organic "thwap" of real skin
+    [[172, 0.34], [185, 0.24]].forEach(([f, g]) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f, t);
+      osc.frequency.exponentialRampToValueAtTime(f * 0.74, t + dec * 0.48);
+      en.gain.setValueAtTime(0.0001, t);
+      en.gain.exponentialRampToValueAtTime(v * g, t + 0.004);
+      en.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.44);
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec * 0.48);
+    });
+
+    // Shell ring overtone
+    const ring = actx.createOscillator(); const ringE = actx.createGain();
+    ring.type = 'sine';
+    ring.frequency.setValueAtTime(308, t);
+    ring.frequency.exponentialRampToValueAtTime(242, t + dec * 0.28);
+    ringE.gain.setValueAtTime(0.0001, t);
+    ringE.gain.exponentialRampToValueAtTime(v * 0.10, t + 0.003);
+    ringE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.20);
+    ring.connect(ringE); ringE.connect(masterGain);
+    ring.start(t); ring.stop(t + dec * 0.24);
+
+    // Snare wire resonances — 4 resonant BP filters model wire column modes
+    [215, 365, 590, 980].forEach((cf, i) => {
+      const nlen = Math.floor(actx.sampleRate * (dec + 0.04));
+      const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let j = 0; j < nlen; j++) nd[j] = (Math.random() * 2 - 1);
+      const ns = actx.createBufferSource(); ns.buffer = nb;
+      const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=cf; bp.Q.value=2.2;
+      const en = actx.createGain();
+      en.gain.setValueAtTime(v * 0.13 * Math.pow(0.68, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + dec * (1 - i * 0.12));
+      ns.connect(bp); bp.connect(en); en.connect(masterGain);
+      ns.start(t); ns.stop(t + dec + 0.05);
+    });
+
+    // Wire broadband noise — warm, capped at 7 kHz
+    const wlen = Math.floor(actx.sampleRate * (dec + 0.04));
+    const wb = actx.createBuffer(1, wlen, actx.sampleRate);
+    const wd = wb.getChannelData(0);
+    for (let i = 0; i < wlen; i++) wd[i] = (Math.random() * 2 - 1);
+    const ws = actx.createBufferSource(); ws.buffer = wb;
+    const whp = actx.createBiquadFilter(); whp.type='highpass'; whp.frequency.value=900;
+    const wlp = actx.createBiquadFilter(); wlp.type='lowpass';  wlp.frequency.value=7000;
+    const we = actx.createGain();
+    we.gain.setValueAtTime(v * 0.36, t);
+    we.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.04);
+    ws.connect(whp); whp.connect(wlp); wlp.connect(we); we.connect(masterGain);
+    ws.start(t); ws.stop(t + dec + 0.06);
+  },
+
+  'hh-closed'(t, v) {
+    // Sine oscillators at Bessel-function cymbal mode ratios
+    // These are the actual modal frequency ratios of a thin circular plate
+    const dec = decScale(0.032);
+    const base = 452;
+    [1.000, 1.516, 2.035, 2.616, 3.234, 3.892].forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = base * r;
+      en.gain.setValueAtTime(v * 0.058 * Math.pow(0.66, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(dec * (1 - i * 0.14), 0.005));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec + 0.010);
+    });
+    // High noise sheen — the "breath" of two cymbals closing
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.008));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7500;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass';  lp.frequency.value=15000;
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.24, t);
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(lp); lp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.010);
+  },
+
+  'hh-open'(t, v) {
+    const dec = decScale(0.52);
+    const base = 452;
+    [1.000, 1.516, 2.035, 2.616, 3.234, 3.892, 4.593].forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = base * r;
+      en.gain.setValueAtTime(v * 0.044 * Math.pow(0.70, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(dec * (1 - i * 0.08), 0.025));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec + 0.04);
+    });
+    // Sizzle — two noise bands at different rates
+    [[5200, 12000, 0.30], [2800, 5200, 0.14]].forEach(([hpf, lpf, g]) => {
+      const nlen = Math.floor(actx.sampleRate * (dec + 0.07));
+      const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+      const ns = actx.createBufferSource(); ns.buffer = nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      ne.gain.setValueAtTime(v * g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t + dec);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t + dec + 0.05);
+    });
+  },
+
+  cymbal(t, v) {
+    // Crash cymbal — dense inharmonic Bessel partials + two noise bands
+    const dec = decScale(1.05);
+    const base = 188;
+    [1.000, 1.490, 2.040, 2.630, 3.290, 4.040, 4.860, 5.780].forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = i < 4 ? 'sine' : 'triangle';
+      osc.frequency.value = base * r;
+      const d = dec * (1 - i * 0.046);
+      en.gain.setValueAtTime(v * 0.048 * Math.pow(0.81, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(d, 0.065));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + Math.max(d, 0.08));
+    });
+    // High shimmer — decays faster
+    // Low wash — decays slowly, gives the "bloom"
+    [[6500, 14000, 0.14, 0.70], [3000, 6500, 0.18, 1.00]].forEach(([hpf, lpf, g, dt]) => {
+      const nlen = Math.floor(actx.sampleRate * (dec * dt + 0.14));
+      const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+      const ns = actx.createBufferSource(); ns.buffer = nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      ne.gain.setValueAtTime(v * g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t + dec * dt + 0.10);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t + dec * dt + 0.14);
+    });
+  },
+
+  'tone-hi'(t,v)  { punk._tom(t, v, 245, 0.19); },
+  'tone-mid'(t,v) { punk._tom(t, v, 174, 0.27); },
+  'tone-lo'(t,v)  { punk._tom(t, v, 118, 0.41); },
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+
+    // FM synthesis — modulator creates natural inharmonic head modes
+    const mod = actx.createOscillator(); const modG = actx.createGain();
+    const car = actx.createOscillator(); const carG = actx.createGain();
+    mod.type = 'sine'; mod.frequency.value = base * 1.68;
+    modG.gain.setValueAtTime(base * 2.6, t);
+    modG.gain.exponentialRampToValueAtTime(0.001, t + 0.040);
+    car.type = 'sine';
+    car.frequency.setValueAtTime(base, t);
+    car.frequency.exponentialRampToValueAtTime(base * 0.64, t + dec * 0.76);
+    carG.gain.setValueAtTime(0.0001, t);
+    carG.gain.exponentialRampToValueAtTime(v * 0.80, t + 0.006);
+    carG.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    mod.connect(modG); modG.connect(car.frequency);
+    car.connect(carG); carG.connect(masterGain);
+    mod.start(t); mod.stop(t + 0.055);
+    car.start(t); car.stop(t + dec + 0.05);
+
+    // Shell overtone — decays faster than head
+    const shell = actx.createOscillator(); const shellE = actx.createGain();
+    shell.type = 'sine';
+    shell.frequency.setValueAtTime(base * 1.55, t);
+    shell.frequency.exponentialRampToValueAtTime(base * 0.94, t + dec * 0.38);
+    shellE.gain.setValueAtTime(0.0001, t);
+    shellE.gain.exponentialRampToValueAtTime(v * 0.14, t + 0.003);
+    shellE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.30);
+    shell.connect(shellE); shellE.connect(masterGain);
+    shell.start(t); shell.stop(t + dec * 0.34);
+
+    // Stick impact — exponential noise burst, narrow bandpass
+    const nlen = Math.floor(actx.sampleRate * 0.026);
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1) * Math.exp(-i / (nlen * 0.35));
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=base*2.1; bp.Q.value=1.6;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * (0.08 + P.attack * 0.16), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + 0.022);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + 0.028);
+  },
+};
+
+/* ═════════════════════════════════════
+   NEW WAVE KIT
+═════════════════════════════════════ */
+const newwave = {
+
+  kick(t, v) {
+    const dec = decScale(0.62);
+
+    // Low-index FM — adds warmth without the punch spike
+    const mod = actx.createOscillator(); const modG = actx.createGain();
+    const car = actx.createOscillator(); const carG = actx.createGain();
+    mod.type = 'sine'; mod.frequency.value = 72;
+    // Index 0.9 — gentle colour, not a punch
+    modG.gain.setValueAtTime(72 * 0.9, t);
+    modG.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    car.type = 'sine';
+    car.frequency.setValueAtTime(50, t);
+    car.frequency.exponentialRampToValueAtTime(38, t + 0.10 * P.decay);
+    carG.gain.setValueAtTime(0.0001, t);
+    carG.gain.exponentialRampToValueAtTime(v * 0.72, t + 0.013); // 13ms = body not punch
+    carG.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    mod.connect(modG); modG.connect(car.frequency);
+    car.connect(carG); carG.connect(masterGain);
+    mod.start(t); mod.stop(t + 0.08);
+    car.start(t); car.stop(t + dec + 0.06);
+
+    // Sub warmth — sine, slow bloom
+    const sub = actx.createOscillator(); const subE = actx.createGain();
+    sub.type = 'sine'; sub.frequency.value = 44;
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.36, t + 0.015);
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.90);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.05);
+
+    // Soft felt beater — LP'd hard, very brief, low gain
+    const blen = Math.floor(actx.sampleRate * 0.018);
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i = 0; i < blen; i++) bd[i] = (Math.random() * 2 - 1) * Math.exp(-i / (blen * 0.3));
+    const bs = actx.createBufferSource(); bs.buffer = bb;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1800;
+    const beE = actx.createGain();
+    beE.gain.setValueAtTime(v * (0.06 + P.attack * 0.14), t);
+    beE.gain.exponentialRampToValueAtTime(0.001, t + 0.016);
+    bs.connect(lp); lp.connect(beE); beE.connect(masterGain);
+    bs.start(t); bs.stop(t + 0.022);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.22);
+
+    // Head — two beating sines, but slower onset so body comes first
+    [[170, 0.30], [182, 0.20]].forEach(([f, g]) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(f, t);
+      osc.frequency.exponentialRampToValueAtTime(f * 0.76, t + dec * 0.50);
+      en.gain.setValueAtTime(0.0001, t);
+      en.gain.exponentialRampToValueAtTime(v * g, t + 0.007); // 7ms onset
+      en.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.46);
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec * 0.50);
+    });
+
+    // Shell — very quiet, just adds wood colour
+    const ring = actx.createOscillator(); const ringE = actx.createGain();
+    ring.type = 'sine';
+    ring.frequency.setValueAtTime(295, t);
+    ring.frequency.exponentialRampToValueAtTime(235, t + dec * 0.30);
+    ringE.gain.setValueAtTime(0.0001, t);
+    ringE.gain.exponentialRampToValueAtTime(v * 0.07, t + 0.005);
+    ringE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.22);
+    ring.connect(ringE); ringE.connect(masterGain);
+    ring.start(t); ring.stop(t + dec * 0.26);
+
+    // Wire resonances — same 4-band model, lower gain
+    [215, 365, 590, 980].forEach((cf, i) => {
+      const nlen = Math.floor(actx.sampleRate * (dec + 0.04));
+      const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let j = 0; j < nlen; j++) nd[j] = (Math.random() * 2 - 1);
+      const ns = actx.createBufferSource(); ns.buffer = nb;
+      const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=cf; bp.Q.value=2.0;
+      const en = actx.createGain();
+      // Half the gain of punk kit
+      en.gain.setValueAtTime(v * 0.07 * Math.pow(0.66, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + dec * (1 - i * 0.12));
+      ns.connect(bp); bp.connect(en); en.connect(masterGain);
+      ns.start(t); ns.stop(t + dec + 0.05);
+    });
+
+    // Wire broadband — capped at 5.5 kHz, softer than punk
+    const wlen = Math.floor(actx.sampleRate * (dec + 0.04));
+    const wb = actx.createBuffer(1, wlen, actx.sampleRate);
+    const wd = wb.getChannelData(0);
+    for (let i = 0; i < wlen; i++) wd[i] = (Math.random() * 2 - 1);
+    const ws = actx.createBufferSource(); ws.buffer = wb;
+    const whp = actx.createBiquadFilter(); whp.type='highpass'; whp.frequency.value=900;
+    const wlp = actx.createBiquadFilter(); wlp.type='lowpass';  wlp.frequency.value=5500;
+    const we = actx.createGain();
+    we.gain.setValueAtTime(v * 0.26, t); // down from 0.36
+    we.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.04);
+    ws.connect(whp); whp.connect(wlp); wlp.connect(we); we.connect(masterGain);
+    ws.start(t); ws.stop(t + dec + 0.06);
+  },
+
+  'hh-closed'(t, v) {
+    // Same Bessel ratios, lower gain, softer noise sheen
+    const dec = decScale(0.030);
+    const base = 445;
+    [1.000, 1.516, 2.035, 2.616, 3.234, 3.892].forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = base * r;
+      en.gain.setValueAtTime(v * 0.042 * Math.pow(0.64, i), t); // down from 0.058
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(dec * (1 - i * 0.14), 0.004));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec + 0.008);
+    });
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.007));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=6500;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass';  lp.frequency.value=13000;
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.16, t); // down from 0.24
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(lp); lp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.008);
+  },
+
+  'hh-open'(t, v) {
+    const dec = decScale(0.50);
+    const base = 445;
+    [1.000, 1.516, 2.035, 2.616, 3.234, 3.892, 4.593].forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = base * r;
+      en.gain.setValueAtTime(v * 0.032 * Math.pow(0.68, i), t); // softer
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(dec * (1 - i * 0.08), 0.022));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + dec + 0.04);
+    });
+    // Single sizzle band — simpler, warmer
+    const nlen = Math.floor(actx.sampleRate * (dec + 0.06));
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const hp = actx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=4800;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass';  lp.frequency.value=11000;
+    const en = actx.createGain();
+    en.gain.setValueAtTime(v * 0.22, t); // quieter
+    en.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    ns.connect(hp); hp.connect(lp); lp.connect(en); en.connect(masterGain);
+    ns.start(t); ns.stop(t + dec + 0.05);
+  },
+
+  cymbal(t, v) {
+    const dec = decScale(1.00);
+    const base = 185;
+    [1.000, 1.490, 2.040, 2.630, 3.290, 4.040, 4.860, 5.780].forEach((r, i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = i < 5 ? 'sine' : 'triangle'; // more sines = softer
+      osc.frequency.value = base * r;
+      const d = dec * (1 - i * 0.046);
+      en.gain.setValueAtTime(v * 0.036 * Math.pow(0.80, i), t); // down from 0.048
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(d, 0.06));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + Math.max(d, 0.08));
+    });
+    // Two noise bands — lower gain
+    [[6000, 13000, 0.10, 0.65], [2800, 6000, 0.13, 0.95]].forEach(([hpf, lpf, g, dt]) => {
+      const nlen = Math.floor(actx.sampleRate * (dec * dt + 0.12));
+      const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1);
+      const ns = actx.createBufferSource(); ns.buffer = nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      ne.gain.setValueAtTime(v * g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t + dec * dt + 0.09);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t + dec * dt + 0.12);
+    });
+  },
+
+  'tone-hi'(t,v)  { newwave._tom(t, v, 242, 0.19); },
+  'tone-mid'(t,v) { newwave._tom(t, v, 172, 0.27); },
+  'tone-lo'(t,v)  { newwave._tom(t, v, 116, 0.41); },
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+
+    // Low-index FM — index 0.8, adds warmth not punch
+    const mod = actx.createOscillator(); const modG = actx.createGain();
+    const car = actx.createOscillator(); const carG = actx.createGain();
+    mod.type = 'sine'; mod.frequency.value = base * 1.65;
+    modG.gain.setValueAtTime(base * 0.8, t); // was 2.6 in punk — much gentler
+    modG.gain.exponentialRampToValueAtTime(0.001, t + 0.035);
+    car.type = 'sine';
+    car.frequency.setValueAtTime(base, t);
+    car.frequency.exponentialRampToValueAtTime(base * 0.66, t + dec * 0.78);
+    carG.gain.setValueAtTime(0.0001, t);
+    carG.gain.exponentialRampToValueAtTime(v * 0.78, t + 0.010); // slower = less punch
+    carG.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    mod.connect(modG); modG.connect(car.frequency);
+    car.connect(carG); carG.connect(masterGain);
+    mod.start(t); mod.stop(t + 0.048);
+    car.start(t); car.stop(t + dec + 0.05);
+
+    // Shell overtone — quiet
+    const shell = actx.createOscillator(); const shellE = actx.createGain();
+    shell.type = 'sine';
+    shell.frequency.setValueAtTime(base * 1.52, t);
+    shell.frequency.exponentialRampToValueAtTime(base * 0.96, t + dec * 0.36);
+    shellE.gain.setValueAtTime(0.0001, t);
+    shellE.gain.exponentialRampToValueAtTime(v * 0.11, t + 0.005);
+    shellE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.28);
+    shell.connect(shellE); shellE.connect(masterGain);
+    shell.start(t); shell.stop(t + dec * 0.32);
+
+    // Stick — half the gain of punk, LP'd lower so it's a thud not a click
+    const nlen = Math.floor(actx.sampleRate * 0.020);
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i = 0; i < nlen; i++) nd[i] = (Math.random() * 2 - 1) * Math.exp(-i / (nlen * 0.35));
+    const ns = actx.createBufferSource(); ns.buffer = nb;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=base*1.8; bp.Q.value=1.4;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v * (0.05 + P.attack * 0.10), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t + 0.018);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t + 0.022);
+  },
+};
+
+/* ═════════════════════════════════════
+   ROCK KIT
+═════════════════════════════════════ */
+const rock = {
+
+  kick(t, v) {
+    const dec = decScale(0.62);
+    // Low-index FM body
+    const mod = actx.createOscillator(); const modG = actx.createGain();
+    const car = actx.createOscillator(); const carG = actx.createGain();
+    mod.type = 'sine'; mod.frequency.value = 72;
+    modG.gain.setValueAtTime(72 * 0.9, t);
+    modG.gain.exponentialRampToValueAtTime(0.001, t + 0.06);
+    car.type = 'sine';
+    car.frequency.setValueAtTime(50, t);
+    car.frequency.exponentialRampToValueAtTime(38, t + 0.10 * P.decay);
+    carG.gain.setValueAtTime(0.0001, t);
+    carG.gain.exponentialRampToValueAtTime(v * 0.72, t + 0.013);
+    carG.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    mod.connect(modG); modG.connect(car.frequency);
+    car.connect(carG); carG.connect(masterGain);
+    mod.start(t); mod.stop(t + 0.08);
+    car.start(t); car.stop(t + dec + 0.06);
+    // Sub warmth
+    const sub = actx.createOscillator(); const subE = actx.createGain();
+    sub.type = 'sine'; sub.frequency.value = 44;
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.36, t + 0.015);
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.90);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.05);
+    // Felt beater — LP'd
+    const blen = Math.floor(actx.sampleRate * 0.018);
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i = 0; i < blen; i++) bd[i] = (Math.random()*2-1)*Math.exp(-i/(blen*0.3));
+    const bs = actx.createBufferSource(); bs.buffer = bb;
+    const lp = actx.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=1800;
+    const beE = actx.createGain();
+    beE.gain.setValueAtTime(v*(0.06+P.attack*0.14), t);
+    beE.gain.exponentialRampToValueAtTime(0.001, t+0.016);
+    bs.connect(lp); lp.connect(beE); beE.connect(masterGain);
+    bs.start(t); bs.stop(t+0.022);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.22);
+    // Two beating head tones
+    [[170,0.30],[182,0.20]].forEach(([f,g]) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(f, t);
+      osc.frequency.exponentialRampToValueAtTime(f*0.76, t+dec*0.50);
+      en.gain.setValueAtTime(0.0001, t);
+      en.gain.exponentialRampToValueAtTime(v*g, t+0.007);
+      en.gain.exponentialRampToValueAtTime(0.001, t+dec*0.46);
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t+dec*0.50);
+    });
+    // Shell colour
+    const ring = actx.createOscillator(); const ringE = actx.createGain();
+    ring.type='sine';
+    ring.frequency.setValueAtTime(295, t);
+    ring.frequency.exponentialRampToValueAtTime(235, t+dec*0.30);
+    ringE.gain.setValueAtTime(0.0001, t);
+    ringE.gain.exponentialRampToValueAtTime(v*0.07, t+0.005);
+    ringE.gain.exponentialRampToValueAtTime(0.001, t+dec*0.22);
+    ring.connect(ringE); ringE.connect(masterGain);
+    ring.start(t); ring.stop(t+dec*0.26);
+    // Wire resonant columns
+    [215,365,590,980].forEach((cf,i) => {
+      const nlen = Math.floor(actx.sampleRate*(dec+0.04));
+      const nb = actx.createBuffer(1,nlen,actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let j=0;j<nlen;j++) nd[j]=(Math.random()*2-1);
+      const ns = actx.createBufferSource(); ns.buffer=nb;
+      const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=cf; bp.Q.value=2.0;
+      const en = actx.createGain();
+      en.gain.setValueAtTime(v*0.07*Math.pow(0.66,i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t+dec*(1-i*0.12));
+      ns.connect(bp); bp.connect(en); en.connect(masterGain);
+      ns.start(t); ns.stop(t+dec+0.05);
+    });
+    // Broadband wire noise — capped at 5.5 kHz
+    const wlen = Math.floor(actx.sampleRate*(dec+0.04));
+    const wb = actx.createBuffer(1,wlen,actx.sampleRate);
+    const wd = wb.getChannelData(0);
+    for (let i=0;i<wlen;i++) wd[i]=(Math.random()*2-1);
+    const ws = actx.createBufferSource(); ws.buffer=wb;
+    const whp = actx.createBiquadFilter(); whp.type='highpass'; whp.frequency.value=900;
+    const wlp = actx.createBiquadFilter(); wlp.type='lowpass';  wlp.frequency.value=5500;
+    const we = actx.createGain();
+    we.gain.setValueAtTime(v*0.26, t);
+    we.gain.exponentialRampToValueAtTime(0.001, t+dec+0.04);
+    ws.connect(whp); whp.connect(wlp); wlp.connect(we); we.connect(masterGain);
+    ws.start(t); ws.stop(t+dec+0.06);
+  },
+
+  'hh-closed'(t, v) {
+    // PURE NOISE — no sine tones at all.
+    // Two noise layers give the crisp "tssk":
+    //   1. Ultra-short transient click (very HP, decays in ~12ms)
+    //   2. Body noise (HP+LP shaped, decays in ~28ms)
+    const dec = decScale(0.028);
+
+    // Transient layer — the initial "t" consonant of the hit
+    const tlen = Math.floor(actx.sampleRate * 0.013);
+    const tb = actx.createBuffer(1, tlen, actx.sampleRate);
+    const td = tb.getChannelData(0);
+    for (let i=0;i<tlen;i++) td[i]=(Math.random()*2-1)*Math.exp(-i/(tlen*0.28));
+    const ts = actx.createBufferSource(); ts.buffer=tb;
+    const thp = actx.createBiquadFilter(); thp.type='highpass'; thp.frequency.value=10000;
+    const tE = actx.createGain();
+    tE.gain.setValueAtTime(v*0.55, t);
+    tE.gain.exponentialRampToValueAtTime(0.001, t+0.012);
+    ts.connect(thp); thp.connect(tE); tE.connect(masterGain);
+    ts.start(t); ts.stop(t+0.016);
+
+    // Body layer — the cymbal "sss" after the attack
+    const blen = Math.floor(actx.sampleRate*(dec+0.006));
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i=0;i<blen;i++) bd[i]=(Math.random()*2-1);
+    const bs = actx.createBufferSource(); bs.buffer=bb;
+    const bhp = actx.createBiquadFilter(); bhp.type='highpass'; bhp.frequency.value=7500;
+    const blp = actx.createBiquadFilter(); blp.type='lowpass';  blp.frequency.value=16000;
+    const bE = actx.createGain();
+    bE.gain.setValueAtTime(v*0.30, t);
+    bE.gain.exponentialRampToValueAtTime(0.001, t+dec);
+    bs.connect(bhp); bhp.connect(blp); blp.connect(bE); bE.connect(masterGain);
+    bs.start(t); bs.stop(t+dec+0.008);
+  },
+
+  'hh-open'(t, v) {
+    // PURE NOISE — three bands model the real open hi-hat spectrum:
+    //   1. Top air (12k+) — the shimmer and breath
+    //   2. Mid sizzle (5k–12k) — the main body of the sound
+    //   3. Low wash (2k–5k) — the bronze resonance underneath
+    const dec = decScale(0.55);
+
+    // Transient click — same as closed but briefer
+    const tlen = Math.floor(actx.sampleRate * 0.010);
+    const tb = actx.createBuffer(1, tlen, actx.sampleRate);
+    const td = tb.getChannelData(0);
+    for (let i=0;i<tlen;i++) td[i]=(Math.random()*2-1)*Math.exp(-i/(tlen*0.25));
+    const ts = actx.createBufferSource(); ts.buffer=tb;
+    const thp = actx.createBiquadFilter(); thp.type='highpass'; thp.frequency.value=9500;
+    const tE = actx.createGain();
+    tE.gain.setValueAtTime(v*0.42, t);
+    tE.gain.exponentialRampToValueAtTime(0.001, t+0.010);
+    ts.connect(thp); thp.connect(tE); tE.connect(masterGain);
+    ts.start(t); ts.stop(t+0.013);
+
+    // Three sizzle/wash bands
+    [
+      [11000, 19000, 0.18, 0.60],  // top air — decays faster
+      [ 4800, 11000, 0.28, 1.00],  // mid sizzle — main body
+      [ 2000,  4800, 0.14, 0.85],  // low wash — bronze warmth
+    ].forEach(([hpf, lpf, g, dt]) => {
+      const nlen = Math.floor(actx.sampleRate*(dec*dt+0.05));
+      const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+      const ns = actx.createBufferSource(); ns.buffer=nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      ne.gain.setValueAtTime(v*g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t+dec*dt+0.04);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t+dec*dt+0.06);
+    });
+  },
+
+  cymbal(t, v) {
+    // Crash — Bessel partials kept (correct for bronze plate),
+    // but sines only (no triangle/square = no odd harmonics = softer)
+    // plus two noise bands for the wash and shimmer
+    const dec = decScale(1.00);
+    const base = 185;
+    [1.000,1.490,2.040,2.630,3.290,4.040,4.860,5.780].forEach((r,i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = base * r;
+      const d = dec*(1-i*0.046);
+      en.gain.setValueAtTime(v*0.034*Math.pow(0.80,i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t+Math.max(d,0.06));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t+Math.max(d,0.08));
+    });
+    [[6000,16000,0.10,0.60],[2500,6000,0.14,0.95]].forEach(([hpf,lpf,g,dt]) => {
+      const nlen = Math.floor(actx.sampleRate*(dec*dt+0.12));
+      const nb = actx.createBuffer(1,nlen,actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+      const ns = actx.createBufferSource(); ns.buffer=nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      ne.gain.setValueAtTime(v*g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t+dec*dt+0.09);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t+dec*dt+0.12);
+    });
+  },
+
+  'tone-hi'(t,v)  { rock._tom(t, v, 242, 0.19); },
+  'tone-mid'(t,v) { rock._tom(t, v, 172, 0.27); },
+  'tone-lo'(t,v)  { rock._tom(t, v, 116, 0.41); },
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+    // Low-index FM — warmth, not punch
+    const mod = actx.createOscillator(); const modG = actx.createGain();
+    const car = actx.createOscillator(); const carG = actx.createGain();
+    mod.type='sine'; mod.frequency.value=base*1.65;
+    modG.gain.setValueAtTime(base*0.8, t);
+    modG.gain.exponentialRampToValueAtTime(0.001, t+0.035);
+    car.type='sine';
+    car.frequency.setValueAtTime(base, t);
+    car.frequency.exponentialRampToValueAtTime(base*0.66, t+dec*0.78);
+    carG.gain.setValueAtTime(0.0001, t);
+    carG.gain.exponentialRampToValueAtTime(v*0.78, t+0.010);
+    carG.gain.exponentialRampToValueAtTime(0.001, t+dec);
+    mod.connect(modG); modG.connect(car.frequency);
+    car.connect(carG); carG.connect(masterGain);
+    mod.start(t); mod.stop(t+0.048);
+    car.start(t); car.stop(t+dec+0.05);
+    // Shell overtone
+    const shell = actx.createOscillator(); const shellE = actx.createGain();
+    shell.type='sine';
+    shell.frequency.setValueAtTime(base*1.52, t);
+    shell.frequency.exponentialRampToValueAtTime(base*0.96, t+dec*0.36);
+    shellE.gain.setValueAtTime(0.0001, t);
+    shellE.gain.exponentialRampToValueAtTime(v*0.11, t+0.005);
+    shellE.gain.exponentialRampToValueAtTime(0.001, t+dec*0.28);
+    shell.connect(shellE); shellE.connect(masterGain);
+    shell.start(t); shell.stop(t+dec*0.32);
+    // Soft stick thud
+    const nlen = Math.floor(actx.sampleRate*0.020);
+    const nb = actx.createBuffer(1,nlen,actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1)*Math.exp(-i/(nlen*0.35));
+    const ns = actx.createBufferSource(); ns.buffer=nb;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=base*1.8; bp.Q.value=1.4;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v*(0.05+P.attack*0.10), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t+0.018);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t+0.022);
+  },
+};
+
+/* ═════════════════════════════════════
+   STAGE KIT  (formerly latest acoustic)
+═════════════════════════════════════ */
+const stage2 = {
+
+  kick(t, v) {
+    const dec = decScale(0.65);
+
+    // Primary membrane tone — pure sine, very slow bloom
+    // Real kick: 50–60 Hz fundamental, settles around 45 Hz
+    const car = actx.createOscillator(); const carE = actx.createGain();
+    car.type = 'sine';
+    car.frequency.setValueAtTime(55, t);
+    car.frequency.exponentialRampToValueAtTime(46, t + 0.030);
+    car.frequency.exponentialRampToValueAtTime(38, t + 0.12 * P.decay);
+    carE.gain.setValueAtTime(0.0001, t);
+    carE.gain.exponentialRampToValueAtTime(v * 0.80, t + 0.014); // 14ms — body before transient
+    carE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    car.connect(carE); carE.connect(masterGain);
+    car.start(t); car.stop(t + dec + 0.05);
+
+    // Sub reinforcement — same note, tuned an octave down, very soft
+    const sub = actx.createOscillator(); const subE = actx.createGain();
+    sub.type = 'sine'; sub.frequency.value = 42;
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.28, t + 0.018);
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.85);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.04);
+
+    // Head tap — very short, narrow bandpass noise, barely there
+    // Represents the beater contact, not a click
+    const hlen = Math.floor(actx.sampleRate * 0.014);
+    const hb = actx.createBuffer(1, hlen, actx.sampleRate);
+    const hd = hb.getChannelData(0);
+    for (let i = 0; i < hlen; i++) hd[i] = (Math.random()*2-1) * Math.exp(-i/(hlen*0.22));
+    const hs = actx.createBufferSource(); hs.buffer = hb;
+    const hbp = actx.createBiquadFilter(); hbp.type='bandpass'; hbp.frequency.value=1600; hbp.Q.value=0.8;
+    const hlp = actx.createBiquadFilter(); hlp.type='lowpass'; hlp.frequency.value=3200;
+    const hE = actx.createGain();
+    hE.gain.setValueAtTime(v * (0.05 + P.attack * 0.12), t);
+    hE.gain.exponentialRampToValueAtTime(0.001, t + 0.013);
+    hs.connect(hbp); hbp.connect(hlp); hlp.connect(hE); hE.connect(masterGain);
+    hs.start(t); hs.stop(t + 0.018);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.24);
+
+    // Primary membrane mode — the main thud
+    const osc1 = actx.createOscillator(); const e1 = actx.createGain();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(165, t);
+    osc1.frequency.exponentialRampToValueAtTime(128, t + dec * 0.52);
+    e1.gain.setValueAtTime(0.0001, t);
+    e1.gain.exponentialRampToValueAtTime(v * 0.38, t + 0.005);
+    e1.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.50);
+    osc1.connect(e1); e1.connect(masterGain);
+    osc1.start(t); osc1.stop(t + dec * 0.54);
+
+    // Secondary membrane mode — slightly higher, decays faster
+    // The beating between these two gives the organic "crack"
+    const osc2 = actx.createOscillator(); const e2 = actx.createGain();
+    osc2.type = 'sine';
+    osc2.frequency.setValueAtTime(178, t);
+    osc2.frequency.exponentialRampToValueAtTime(140, t + dec * 0.38);
+    e2.gain.setValueAtTime(0.0001, t);
+    e2.gain.exponentialRampToValueAtTime(v * 0.22, t + 0.004);
+    e2.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.36);
+    osc2.connect(e2); e2.connect(masterGain);
+    osc2.start(t); osc2.stop(t + dec * 0.40);
+
+    // Snare wire rattle — warm noise only, capped at 5 kHz
+    // No resonant peaks — just the texture of the wire bundle
+    const wlen = Math.floor(actx.sampleRate * (dec + 0.05));
+    const wb = actx.createBuffer(1, wlen, actx.sampleRate);
+    const wd = wb.getChannelData(0);
+    for (let i = 0; i < wlen; i++) wd[i] = (Math.random()*2-1);
+    const ws = actx.createBufferSource(); ws.buffer = wb;
+    const whp = actx.createBiquadFilter(); whp.type='highpass'; whp.frequency.value=1100;
+    const wlp = actx.createBiquadFilter(); wlp.type='lowpass';  wlp.frequency.value=5000;
+    const wE = actx.createGain();
+    wE.gain.setValueAtTime(v * 0.42, t);
+    wE.gain.exponentialRampToValueAtTime(v * 0.18, t + 0.018); // initial rattle settles
+    wE.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.04);
+    ws.connect(whp); whp.connect(wlp); wlp.connect(wE); wE.connect(masterGain);
+    ws.start(t); ws.stop(t + dec + 0.06);
+
+    // Stick on head — very brief bandpass click, soft
+    const slen = Math.floor(actx.sampleRate * 0.010);
+    const sb = actx.createBuffer(1, slen, actx.sampleRate);
+    const sd = sb.getChannelData(0);
+    for (let i = 0; i < slen; i++) sd[i] = (Math.random()*2-1)*Math.exp(-i/(slen*0.3));
+    const ss = actx.createBufferSource(); ss.buffer = sb;
+    const sbp = actx.createBiquadFilter(); sbp.type='bandpass'; sbp.frequency.value=3800; sbp.Q.value=1.2;
+    const sE = actx.createGain();
+    sE.gain.setValueAtTime(v * (0.08 + P.attack * 0.16), t);
+    sE.gain.exponentialRampToValueAtTime(0.001, t + 0.010);
+    ss.connect(sbp); sbp.connect(sE); sE.connect(masterGain);
+    ss.start(t); ss.stop(t + 0.013);
+  },
+
+  // Hi-hats: same proven pure-noise design from previous kit
+  'hh-closed'(t, v) {
+    const dec = decScale(0.028);
+    // Transient click
+    const tlen = Math.floor(actx.sampleRate * 0.013);
+    const tb = actx.createBuffer(1, tlen, actx.sampleRate);
+    const td = tb.getChannelData(0);
+    for (let i=0;i<tlen;i++) td[i]=(Math.random()*2-1)*Math.exp(-i/(tlen*0.28));
+    const ts = actx.createBufferSource(); ts.buffer=tb;
+    const thp = actx.createBiquadFilter(); thp.type='highpass'; thp.frequency.value=10000;
+    const tE = actx.createGain();
+    tE.gain.setValueAtTime(v*0.55, t);
+    tE.gain.exponentialRampToValueAtTime(0.001, t+0.012);
+    ts.connect(thp); thp.connect(tE); tE.connect(masterGain);
+    ts.start(t); ts.stop(t+0.016);
+    // Body noise
+    const blen = Math.floor(actx.sampleRate*(dec+0.006));
+    const bb = actx.createBuffer(1, blen, actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i=0;i<blen;i++) bd[i]=(Math.random()*2-1);
+    const bs = actx.createBufferSource(); bs.buffer=bb;
+    const bhp = actx.createBiquadFilter(); bhp.type='highpass'; bhp.frequency.value=7500;
+    const blp = actx.createBiquadFilter(); blp.type='lowpass';  blp.frequency.value=16000;
+    const bE = actx.createGain();
+    bE.gain.setValueAtTime(v*0.30, t);
+    bE.gain.exponentialRampToValueAtTime(0.001, t+dec);
+    bs.connect(bhp); bhp.connect(blp); blp.connect(bE); bE.connect(masterGain);
+    bs.start(t); bs.stop(t+dec+0.008);
+  },
+
+  'hh-open'(t, v) {
+    const dec = decScale(0.55);
+    // Transient click
+    const tlen = Math.floor(actx.sampleRate * 0.010);
+    const tb = actx.createBuffer(1, tlen, actx.sampleRate);
+    const td = tb.getChannelData(0);
+    for (let i=0;i<tlen;i++) td[i]=(Math.random()*2-1)*Math.exp(-i/(tlen*0.25));
+    const ts = actx.createBufferSource(); ts.buffer=tb;
+    const thp = actx.createBiquadFilter(); thp.type='highpass'; thp.frequency.value=9500;
+    const tE = actx.createGain();
+    tE.gain.setValueAtTime(v*0.42, t);
+    tE.gain.exponentialRampToValueAtTime(0.001, t+0.010);
+    ts.connect(thp); thp.connect(tE); tE.connect(masterGain);
+    ts.start(t); ts.stop(t+0.013);
+    // Three sizzle/wash bands
+    [[11000,19000,0.18,0.60],[4800,11000,0.28,1.00],[2000,4800,0.14,0.85]].forEach(([hpf,lpf,g,dt]) => {
+      const nlen = Math.floor(actx.sampleRate*(dec*dt+0.05));
+      const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+      const ns = actx.createBufferSource(); ns.buffer=nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      ne.gain.setValueAtTime(v*g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t+dec*dt+0.04);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t+dec*dt+0.06);
+    });
+  },
+
+  cymbal(t, v) {
+    const dec = decScale(1.00);
+    const base = 185;
+    [1.000,1.490,2.040,2.630,3.290,4.040,4.860,5.780].forEach((r,i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type='sine';
+      osc.frequency.value=base*r;
+      const d=dec*(1-i*0.046);
+      en.gain.setValueAtTime(v*0.034*Math.pow(0.80,i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t+Math.max(d,0.06));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t+Math.max(d,0.08));
+    });
+    [[6000,16000,0.10,0.60],[2500,6000,0.14,0.95]].forEach(([hpf,lpf,g,dt]) => {
+      const nlen = Math.floor(actx.sampleRate*(dec*dt+0.12));
+      const nb = actx.createBuffer(1,nlen,actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+      const ns = actx.createBufferSource(); ns.buffer=nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      ne.gain.setValueAtTime(v*g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t+dec*dt+0.09);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t+dec*dt+0.12);
+    });
+  },
+
+  'tone-hi'(t,v)  { stage2._tom(t, v, 238, 0.19); },
+  'tone-mid'(t,v) { stage2._tom(t, v, 168, 0.27); },
+  'tone-lo'(t,v)  { stage2._tom(t, v, 114, 0.42); },
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+    // Pure sine fundamental — no FM, just the drum tone
+    const car = actx.createOscillator(); const carE = actx.createGain();
+    car.type = 'sine';
+    car.frequency.setValueAtTime(base, t);
+    car.frequency.exponentialRampToValueAtTime(base * 0.68, t + dec * 0.80);
+    carE.gain.setValueAtTime(0.0001, t);
+    carE.gain.exponentialRampToValueAtTime(v * 0.80, t + 0.008);
+    carE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    car.connect(carE); carE.connect(masterGain);
+    car.start(t); car.stop(t + dec + 0.04);
+
+    // Warm overtone — just a whisper of the second mode
+    const ov = actx.createOscillator(); const ovE = actx.createGain();
+    ov.type = 'sine';
+    ov.frequency.setValueAtTime(base * 1.48, t);
+    ov.frequency.exponentialRampToValueAtTime(base * 0.98, t + dec * 0.34);
+    ovE.gain.setValueAtTime(0.0001, t);
+    ovE.gain.exponentialRampToValueAtTime(v * 0.12, t + 0.005);
+    ovE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.28);
+    ov.connect(ovE); ovE.connect(masterGain);
+    ov.start(t); ov.stop(t + dec * 0.32);
+
+    // Head contact — narrow noise, very soft, fast
+    const nlen = Math.floor(actx.sampleRate * 0.016);
+    const nb = actx.createBuffer(1, nlen, actx.sampleRate);
+    const nd = nb.getChannelData(0);
+    for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1)*Math.exp(-i/(nlen*0.30));
+    const ns = actx.createBufferSource(); ns.buffer=nb;
+    const bp = actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=base*1.75; bp.Q.value=1.3;
+    const ne = actx.createGain();
+    ne.gain.setValueAtTime(v*(0.04+P.attack*0.09), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t+0.014);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t+0.018);
+  },
+};
+
+/* ═════════════════════════════════════
+   ACOUSTIC KIT  (based on Rock — best
+   attempt so far. Rock toms / hi-hats
+   carried over unchanged. Cymbal rebuilt
+   for warmth — lower base freq, more mid
+   wash, much less high shimmer, slow bloom.
+   Kick: slightly more sub, slightly slower
+   attack. Snare: wire rattle dialed back
+   a touch, head modes kept identical.
+═════════════════════════════════════ */
+const acoustic = {
+
+  kick(t, v) {
+    const dec = decScale(0.65);
+    // Primary tone — same as rock, just 2ms slower attack for more body
+    const car = actx.createOscillator(); const carE = actx.createGain();
+    car.type = 'sine';
+    car.frequency.setValueAtTime(52, t);
+    car.frequency.exponentialRampToValueAtTime(44, t + 0.032);
+    car.frequency.exponentialRampToValueAtTime(36, t + 0.13 * P.decay);
+    carE.gain.setValueAtTime(0.0001, t);
+    carE.gain.exponentialRampToValueAtTime(v * 0.80, t + 0.016); // 16ms
+    carE.gain.exponentialRampToValueAtTime(0.001, t + dec);
+    car.connect(carE); carE.connect(masterGain);
+    car.start(t); car.stop(t + dec + 0.05);
+    // Sub — slightly louder than rock
+    const sub = actx.createOscillator(); const subE = actx.createGain();
+    sub.type = 'sine'; sub.frequency.value = 40;
+    subE.gain.setValueAtTime(0.0001, t);
+    subE.gain.exponentialRampToValueAtTime(v * 0.34, t + 0.020);
+    subE.gain.exponentialRampToValueAtTime(0.001, t + dec * 0.88);
+    sub.connect(subE); subE.connect(masterGain);
+    sub.start(t); sub.stop(t + dec + 0.04);
+    // Head tap — identical to rock
+    const hlen = Math.floor(actx.sampleRate * 0.014);
+    const hb = actx.createBuffer(1, hlen, actx.sampleRate);
+    const hd = hb.getChannelData(0);
+    for (let i=0;i<hlen;i++) hd[i]=(Math.random()*2-1)*Math.exp(-i/(hlen*0.22));
+    const hs = actx.createBufferSource(); hs.buffer=hb;
+    const hbp = actx.createBiquadFilter(); hbp.type='bandpass'; hbp.frequency.value=1600; hbp.Q.value=0.8;
+    const hlp = actx.createBiquadFilter(); hlp.type='lowpass'; hlp.frequency.value=3200;
+    const hE = actx.createGain();
+    hE.gain.setValueAtTime(v*(0.05+P.attack*0.12), t);
+    hE.gain.exponentialRampToValueAtTime(0.001, t+0.013);
+    hs.connect(hbp); hbp.connect(hlp); hlp.connect(hE); hE.connect(masterGain);
+    hs.start(t); hs.stop(t+0.018);
+  },
+
+  snare(t, v) {
+    const dec = decScale(0.24);
+    // Head modes — identical to rock
+    [[165,0.38],[178,0.22]].forEach(([f,g]) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type='sine';
+      osc.frequency.setValueAtTime(f, t);
+      osc.frequency.exponentialRampToValueAtTime(f*0.76, t+dec*0.52);
+      en.gain.setValueAtTime(0.0001, t);
+      en.gain.exponentialRampToValueAtTime(v*g, t+0.005);
+      en.gain.exponentialRampToValueAtTime(0.001, t+dec*0.50);
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t+dec*0.54);
+    });
+    // Wire rattle — same shape but gain down a notch (0.36 → 0.30)
+    const wlen = Math.floor(actx.sampleRate*(dec+0.05));
+    const wb = actx.createBuffer(1, wlen, actx.sampleRate);
+    const wd = wb.getChannelData(0);
+    for (let i=0;i<wlen;i++) wd[i]=(Math.random()*2-1);
+    const ws = actx.createBufferSource(); ws.buffer=wb;
+    const whp = actx.createBiquadFilter(); whp.type='highpass'; whp.frequency.value=1100;
+    const wlp = actx.createBiquadFilter(); wlp.type='lowpass';  wlp.frequency.value=5000;
+    const wE = actx.createGain();
+    wE.gain.setValueAtTime(v * 0.36, t);
+    wE.gain.exponentialRampToValueAtTime(v * 0.14, t + 0.018);
+    wE.gain.exponentialRampToValueAtTime(0.001, t + dec + 0.04);
+    ws.connect(whp); whp.connect(wlp); wlp.connect(wE); wE.connect(masterGain);
+    ws.start(t); ws.stop(t+dec+0.06);
+    // Stick tap — identical to rock
+    const slen = Math.floor(actx.sampleRate*0.010);
+    const sb = actx.createBuffer(1,slen,actx.sampleRate);
+    const sd = sb.getChannelData(0);
+    for (let i=0;i<slen;i++) sd[i]=(Math.random()*2-1)*Math.exp(-i/(slen*0.3));
+    const ss = actx.createBufferSource(); ss.buffer=sb;
+    const sbp = actx.createBiquadFilter(); sbp.type='bandpass'; sbp.frequency.value=3800; sbp.Q.value=1.2;
+    const sE = actx.createGain();
+    sE.gain.setValueAtTime(v*(0.08+P.attack*0.16), t);
+    sE.gain.exponentialRampToValueAtTime(0.001, t+0.010);
+    ss.connect(sbp); sbp.connect(sE); sE.connect(masterGain);
+    ss.start(t); ss.stop(t+0.013);
+  },
+
+  // Hi-hats — identical to rock (they were good)
+  'hh-closed'(t, v) {
+    const dec = decScale(0.028);
+    const tlen = Math.floor(actx.sampleRate*0.013);
+    const tb = actx.createBuffer(1,tlen,actx.sampleRate);
+    const td = tb.getChannelData(0);
+    for (let i=0;i<tlen;i++) td[i]=(Math.random()*2-1)*Math.exp(-i/(tlen*0.28));
+    const ts = actx.createBufferSource(); ts.buffer=tb;
+    const thp = actx.createBiquadFilter(); thp.type='highpass'; thp.frequency.value=10000;
+    const tE = actx.createGain();
+    tE.gain.setValueAtTime(v*0.55, t);
+    tE.gain.exponentialRampToValueAtTime(0.001, t+0.012);
+    ts.connect(thp); thp.connect(tE); tE.connect(masterGain);
+    ts.start(t); ts.stop(t+0.016);
+    const blen = Math.floor(actx.sampleRate*(dec+0.006));
+    const bb = actx.createBuffer(1,blen,actx.sampleRate);
+    const bd = bb.getChannelData(0);
+    for (let i=0;i<blen;i++) bd[i]=(Math.random()*2-1);
+    const bs = actx.createBufferSource(); bs.buffer=bb;
+    const bhp = actx.createBiquadFilter(); bhp.type='highpass'; bhp.frequency.value=7500;
+    const blp = actx.createBiquadFilter(); blp.type='lowpass';  blp.frequency.value=16000;
+    const bE = actx.createGain();
+    bE.gain.setValueAtTime(v*0.30, t);
+    bE.gain.exponentialRampToValueAtTime(0.001, t+dec);
+    bs.connect(bhp); bhp.connect(blp); blp.connect(bE); bE.connect(masterGain);
+    bs.start(t); bs.stop(t+dec+0.008);
+  },
+
+  'hh-open'(t, v) {
+    const dec = decScale(0.55);
+    const tlen = Math.floor(actx.sampleRate*0.010);
+    const tb = actx.createBuffer(1,tlen,actx.sampleRate);
+    const td = tb.getChannelData(0);
+    for (let i=0;i<tlen;i++) td[i]=(Math.random()*2-1)*Math.exp(-i/(tlen*0.25));
+    const ts = actx.createBufferSource(); ts.buffer=tb;
+    const thp = actx.createBiquadFilter(); thp.type='highpass'; thp.frequency.value=9500;
+    const tE = actx.createGain();
+    tE.gain.setValueAtTime(v*0.42, t);
+    tE.gain.exponentialRampToValueAtTime(0.001, t+0.010);
+    ts.connect(thp); thp.connect(tE); tE.connect(masterGain);
+    ts.start(t); ts.stop(t+0.013);
+    [[11000,19000,0.18,0.60],[4800,11000,0.28,1.00],[2000,4800,0.14,0.85]].forEach(([hpf,lpf,g,dt])=>{
+      const nlen=Math.floor(actx.sampleRate*(dec*dt+0.05));
+      const nb=actx.createBuffer(1,nlen,actx.sampleRate); const nd=nb.getChannelData(0);
+      for(let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+      const ns=actx.createBufferSource(); ns.buffer=nb;
+      const nhp=actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp=actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne=actx.createGain();
+      ne.gain.setValueAtTime(v*g, t);
+      ne.gain.exponentialRampToValueAtTime(0.001, t+dec*dt+0.04);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t+dec*dt+0.06);
+    });
+  },
+
+  cymbal(t, v) {
+    // ── REBUILT for warmth / "toast" ──
+    // Lower base freq (162 vs 185) = bigger, darker cymbal
+    // More Bessel partials but lower gain each — denser, not louder
+    // Slow attack on the mid wash = the bloom arrives after the stick
+    // High shimmer cut in half — less ping, more paper
+    // Added a warm low band (700–2500 Hz) for that bronze body resonance
+    const dec = decScale(1.10);
+    const base = 162; // darker than rock's 185
+
+    [1.000,1.490,2.040,2.630,3.290,4.040,4.860,5.780,6.820].forEach((r,i) => {
+      const osc = actx.createOscillator(); const en = actx.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = base * r;
+      const d = dec * (1 - i * 0.040);
+      en.gain.setValueAtTime(v * 0.028 * Math.pow(0.80, i), t);
+      en.gain.exponentialRampToValueAtTime(0.001, t + Math.max(d, 0.06));
+      osc.connect(en); en.connect(masterGain);
+      osc.start(t); osc.stop(t + Math.max(d, 0.08));
+    });
+
+    // Noise layers — three bands, lowest is new, gives the "toast"
+    [
+      // [hp,    lp,    gain, decMult, attackTime]
+      [6000,  16000,  0.06,  0.55,   0.001], // high shimmer — halved from rock
+      [2500,   6000,  0.12,  0.95,   0.022], // mid sizzle — slow attack = bloom
+      [ 700,   2500,  0.10,  1.00,   0.035], // warm body — the "toast" layer
+    ].forEach(([hpf,lpf,g,dt,atk]) => {
+      const nlen = Math.floor(actx.sampleRate*(dec*dt+0.14));
+      const nb = actx.createBuffer(1,nlen,actx.sampleRate);
+      const nd = nb.getChannelData(0);
+      for (let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1);
+      const ns = actx.createBufferSource(); ns.buffer=nb;
+      const nhp = actx.createBiquadFilter(); nhp.type='highpass'; nhp.frequency.value=hpf;
+      const nlp = actx.createBiquadFilter(); nlp.type='lowpass';  nlp.frequency.value=lpf;
+      const ne = actx.createGain();
+      // Slow attack on warm bands = they bloom after the stick transient
+      ne.gain.setValueAtTime(0.0001, t);
+      ne.gain.exponentialRampToValueAtTime(v*g, t+atk);
+      ne.gain.exponentialRampToValueAtTime(0.001, t+dec*dt+0.10);
+      ns.connect(nhp); nhp.connect(nlp); nlp.connect(ne); ne.connect(masterGain);
+      ns.start(t); ns.stop(t+dec*dt+0.14);
+    });
+  },
+
+  // Toms — identical to rock (they were good)
+  'tone-hi'(t,v)  { acoustic._tom(t, v, 238, 0.19); },
+  'tone-mid'(t,v) { acoustic._tom(t, v, 168, 0.27); },
+  'tone-lo'(t,v)  { acoustic._tom(t, v, 114, 0.42); },
+
+  _tom(t, v, base, baseDec) {
+    const dec = decScale(baseDec);
+    const car = actx.createOscillator(); const carE = actx.createGain();
+    car.type='sine';
+    car.frequency.setValueAtTime(base, t);
+    car.frequency.exponentialRampToValueAtTime(base*0.68, t+dec*0.80);
+    carE.gain.setValueAtTime(0.0001, t);
+    carE.gain.exponentialRampToValueAtTime(v*0.80, t+0.008);
+    carE.gain.exponentialRampToValueAtTime(0.001, t+dec);
+    car.connect(carE); carE.connect(masterGain);
+    car.start(t); car.stop(t+dec+0.04);
+    const ov = actx.createOscillator(); const ovE = actx.createGain();
+    ov.type='sine';
+    ov.frequency.setValueAtTime(base*1.48, t);
+    ov.frequency.exponentialRampToValueAtTime(base*0.98, t+dec*0.34);
+    ovE.gain.setValueAtTime(0.0001, t);
+    ovE.gain.exponentialRampToValueAtTime(v*0.12, t+0.005);
+    ovE.gain.exponentialRampToValueAtTime(0.001, t+dec*0.28);
+    ov.connect(ovE); ovE.connect(masterGain);
+    ov.start(t); ov.stop(t+dec*0.32);
+    const nlen=Math.floor(actx.sampleRate*0.016);
+    const nb=actx.createBuffer(1,nlen,actx.sampleRate); const nd=nb.getChannelData(0);
+    for(let i=0;i<nlen;i++) nd[i]=(Math.random()*2-1)*Math.exp(-i/(nlen*0.30));
+    const ns=actx.createBufferSource(); ns.buffer=nb;
+    const bp=actx.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=base*1.75; bp.Q.value=1.3;
+    const ne=actx.createGain();
+    ne.gain.setValueAtTime(v*(0.04+P.attack*0.09), t);
+    ne.gain.exponentialRampToValueAtTime(0.001, t+0.014);
+    ns.connect(bp); bp.connect(ne); ne.connect(masterGain);
+    ns.start(t); ns.stop(t+0.018);
+  },
+};
+
+const KITS = { acoustic, stage2, rock, newwave, punk, jazz, pop, techno, stage, electric };
+
+/* ═════════════════════════════════════
+   PLAY
+═════════════════════════════════════ */
+function playDrum(type, vel) {
+  if (!actx) return;
+  const kit = KITS[currentKit];
+  if (kit[type]) kit[type](actx.currentTime, vel * P.volume);
+}
+
+/* ═════════════════════════════════════
+   PAD VISUALS
+═════════════════════════════════════ */
+const hitTimers = {};
+function padHit(type, cx, cy) {
+  const el = document.querySelector(`[data-pad="${type}"]`);
+  if (!el) return;
+  el.classList.add('hit');
+  clearTimeout(hitTimers[type]);
+  hitTimers[type] = setTimeout(() => el.classList.remove('hit'), 135);
+
+  const r = document.createElement('div'); r.className = 'ripple';
+  const size = Math.max(el.offsetWidth, el.offsetHeight) * 0.65;
+  const rect = el.getBoundingClientRect();
+  r.style.cssText = `left:${(cx!==undefined?cx-rect.left:rect.width/2)-size/2}px;`
+                  + `top:${(cy!==undefined?cy-rect.top:rect.height/2)-size/2}px;`
+                  + `width:${size}px;height:${size}px;`;
+  el.appendChild(r);
+  setTimeout(() => r.parentNode && r.parentNode.removeChild(r), 540);
+}
+
+/* ═════════════════════════════════════
+   BUILD KNOB STRIP
+═════════════════════════════════════ */
+function buildKnobs() {
+  const strip = document.getElementById('knob-strip');
+  KNOB_GROUPS.forEach((grp, gi) => {
+    if (gi > 0) { const s=document.createElement('div'); s.className='ksep'; strip.appendChild(s); }
+    const wrap = document.createElement('div'); wrap.className='kgrp';
+    const lbl  = document.createElement('div'); lbl.className='kgrp-lbl'; lbl.textContent=grp.lbl;
+    const row  = document.createElement('div'); row.className='krow';
+    grp.knobs.forEach(def => buildKnob(def, row));
+    wrap.appendChild(lbl); wrap.appendChild(row); strip.appendChild(wrap);
+  });
+}
+
+function buildKnob(def, container) {
+  const wrap  = document.createElement('div'); wrap.className='kwrap';
+  wrap.dataset.param = def.p;
+  wrap.dataset.min   = def.min;
+  wrap.dataset.max   = def.max;
+  const body  = document.createElement('div'); body.className='kbody';
+
+  /* tick marks */
+  for (let i=0;i<11;i++) {
+    const angle = -135 + i*27;
+    const major = (i===0||i===5||i===10);
+    const tick = document.createElement('div'); tick.className='ktick';
+    tick.style.transform = `rotate(${angle}deg)`;
+    const line = document.createElement('div'); line.className='ktick-line';
+    line.style.cssText = `width:${major?2:1.5}px;height:${major?7:4}px;`
+      + `background:${major?'rgba(139,106,66,0.45)':'rgba(180,150,110,0.22)'};`;
+    tick.appendChild(line); body.appendChild(tick);
+  }
+
+  const ptr    = document.createElement('div'); ptr.className='kptr';
+  const needle = document.createElement('div'); needle.className='kneedle';
+  ptr.appendChild(needle); body.appendChild(ptr);
+
+  const gloss = document.createElement('div'); gloss.className='kgloss'; body.appendChild(gloss);
+  const lbl   = document.createElement('div'); lbl.className='klbl'; lbl.textContent=def.l;
+  const vdisp = document.createElement('div'); vdisp.className='kval';
+  wrap.appendChild(body); wrap.appendChild(lbl); wrap.appendChild(vdisp);
+  container.appendChild(wrap);
+
+  function apply(v) {
+    P[def.p] = v;
+    const norm = (v - def.min) / (def.max - def.min);
+    ptr.style.transform = `rotate(${-135 + norm*270}deg)`;
+    vdisp.textContent = v < 10 ? v.toFixed(2) : v.toFixed(1);
+    /* live update audio nodes */
+    if (!actx) return;
+    if (def.p === 'reverb'  && reverbWet)       reverbWet.gain.value = v;
+    if (def.p === 'volume'  && masterGain)       masterGain.gain.value = v;
+    if (def.p === 'tone'    && actx._tone)       actx._tone.frequency.value = toneToHz(v);
+    if (def.p === 'drive'   && actx._shaper)     actx._shaper.curve = makeDriveCurve(v);
+  }
+
+  /* mouse drag */
+  body.addEventListener('mousedown', e => {
+    e.preventDefault();
+    const sy = e.clientY, sv = P[def.p], range = def.max - def.min;
+    const mm = e => apply(Math.min(def.max, Math.max(def.min, sv + ((sy-e.clientY)/120)*range)));
+    const mu = () => { window.removeEventListener('mousemove',mm); window.removeEventListener('mouseup',mu); };
+    window.addEventListener('mousemove',mm); window.addEventListener('mouseup',mu);
+  });
+  /* touch drag */
+  body.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const sy=e.touches[0].clientY, sv=P[def.p], range=def.max-def.min;
+    const tm=e=>{e.preventDefault();apply(Math.min(def.max,Math.max(def.min,sv+((sy-e.touches[0].clientY)/120)*range)));};
+    const te=()=>{body.removeEventListener('touchmove',tm);body.removeEventListener('touchend',te);body.removeEventListener('touchcancel',te);};
+    body.addEventListener('touchmove',tm,{passive:false});
+    body.addEventListener('touchend',te); body.addEventListener('touchcancel',te);
+  },{passive:false});
+
+  apply(def.v);
+}
+
+/* ═════════════════════════════════════
+   BIND PADS
+═════════════════════════════════════ */
+function bindPads() {
+  document.querySelectorAll('.pad').forEach(el => {
+    const type = el.getAttribute('data-pad');
+    el.addEventListener('mousedown', e => {
+      e.preventDefault();
+      if (!actx) bootAudio();
+      playDrum(type, 0.88);
+      padHit(type, e.clientX, e.clientY);
+    }, {passive:false});
+    el.addEventListener('touchstart', e => {
+      e.preventDefault();
+      if (!actx) bootAudio();
+      const t = e.touches[0];
+      playDrum(type, 0.88);
+      padHit(type, t.clientX, t.clientY);
+    }, {passive:false});
+  });
+}
+
+/* ═════════════════════════════════════
+   PER-KIT KNOB DEFAULTS
+   Values tuned to each kit's character.
+═════════════════════════════════════ */
+const KIT_DEFAULTS = {
+  acoustic: { reverb:0.20, decay:0.90, tone:0.50, attack:0.18, drive:0.03, volume:0.80 },
+  stage2:   { reverb:0.22, decay:0.86, tone:0.54, attack:0.22, drive:0.05, volume:0.80 },
+  rock:     { reverb:0.22, decay:0.85, tone:0.60, attack:0.38, drive:0.14, volume:0.82 },
+  newwave:  { reverb:0.20, decay:0.80, tone:0.70, attack:0.55, drive:0.22, volume:0.82 },
+  punk:     { reverb:0.18, decay:0.78, tone:0.72, attack:0.62, drive:0.28, volume:0.84 },
+  jazz:     { reverb:0.16, decay:0.88, tone:0.50, attack:0.20, drive:0.04, volume:0.78 },
+  pop:      { reverb:0.26, decay:1.00, tone:0.68, attack:0.48, drive:0.16, volume:0.82 },
+  techno:   { reverb:0.12, decay:0.72, tone:0.84, attack:0.80, drive:0.42, volume:0.85 },
+  stage:    { reverb:0.30, decay:1.00, tone:0.70, attack:0.46, drive:0.14, volume:0.82 },
+  electric: { reverb:0.08, decay:0.68, tone:0.90, attack:0.88, drive:0.48, volume:0.85 },
+};
+
+function applyKitDefaults(kitKey) {
+  const defs = KIT_DEFAULTS[kitKey];
+  if (!defs) return;
+  Object.entries(defs).forEach(([k, v]) => {
+    P[k] = v;
+    // Find the knob for this param and update its visual
+    const kw = document.querySelector(`.kwrap[data-param="${k}"]`);
+    if (!kw) return;
+    const min  = parseFloat(kw.dataset.min);
+    const max  = parseFloat(kw.dataset.max);
+    const ptr  = kw.querySelector('.kptr');
+    const vd   = kw.querySelector('.kval');
+    const rot  = -135 + ((v - min) / (max - min)) * 270;
+    if (ptr) ptr.style.transform = `rotate(${rot}deg)`;
+    if (vd)  vd.textContent = Math.abs(v) < 10 ? v.toFixed(2) : v.toFixed(1);
+  });
+}
+
+/* ═════════════════════════════════════
+   KIT SELECTOR
+═════════════════════════════════════ */
+document.getElementById('kit-select').addEventListener('change', e => {
+  const val = e.target.value;
+  if (val.startsWith('custom:')) {
+    // Load saved custom preset
+    const presets = loadPresets();
+    const preset  = presets.find(p => p.id === val);
+    if (preset) {
+      currentKit = preset.baseKit;
+      Object.entries(preset.knobs).forEach(([k, v]) => {
+        P[k] = v;
+        const kw = document.querySelector(`.kwrap[data-param="${k}"]`);
+        if (!kw) return;
+        const min = parseFloat(kw.dataset.min);
+        const max = parseFloat(kw.dataset.max);
+        const ptr = kw.querySelector('.kptr');
+        const vd  = kw.querySelector('.kval');
+        const rot = -135 + ((v - min) / (max - min)) * 270;
+        if (ptr) ptr.style.transform = `rotate(${rot}deg)`;
+        if (vd)  vd.textContent = Math.abs(v) < 10 ? v.toFixed(2) : v.toFixed(1);
+      });
+    }
+  } else {
+    currentKit = val;
+    applyKitDefaults(val);
+  }
 });
+
+/* ═════════════════════════════════════
+   CUSTOM PRESET SAVE / LOAD
+═════════════════════════════════════ */
+const PRESET_KEY = 'microdrum_presets';
+
+function loadPresets() {
+  try { return JSON.parse(localStorage.getItem(PRESET_KEY)) || []; }
+  catch { return []; }
+}
+
+function savePresets(arr) {
+  try { localStorage.setItem(PRESET_KEY, JSON.stringify(arr)); } catch(e){}
+}
+
+function addPresetToSelect(preset) {
+  const sel = document.getElementById('kit-select');
+  // Remove existing option with same id if re-saving
+  const existing = sel.querySelector(`option[value="${preset.id}"]`);
+  if (existing) existing.remove();
+  const opt = document.createElement('option');
+  opt.value = preset.id;
+  opt.textContent = `★ ${preset.name}`;
+  sel.appendChild(opt);
+}
+
+function initPresets() {
+  loadPresets().forEach(addPresetToSelect);
+}
+
+// Save button toggle
+document.getElementById('save-btn').addEventListener('click', () => {
+  document.getElementById('save-form').style.display = 'flex';
+  document.getElementById('save-btn').style.display  = 'none';
+  document.getElementById('preset-name').focus();
+});
+
+document.getElementById('preset-cancel').addEventListener('click', () => {
+  document.getElementById('save-form').style.display = 'none';
+  document.getElementById('save-btn').style.display  = '';
+  document.getElementById('preset-name').value = '';
+});
+
+document.getElementById('preset-confirm').addEventListener('click', () => {
+  const name = document.getElementById('preset-name').value.trim();
+  if (!name) { document.getElementById('preset-name').focus(); return; }
+  const preset = {
+    id:      'custom:' + Date.now(),
+    name,
+    baseKit: currentKit.startsWith('custom:') ? (loadPresets().find(p=>p.id===currentKit)?.baseKit || 'acoustic') : currentKit,
+    knobs:   { ...P },
+  };
+  const presets = loadPresets();
+  presets.push(preset);
+  savePresets(presets);
+  addPresetToSelect(preset);
+  // Select the new preset
+  document.getElementById('kit-select').value = preset.id;
+  document.getElementById('save-form').style.display = 'none';
+  document.getElementById('save-btn').style.display  = '';
+  document.getElementById('preset-name').value = '';
+});
+
+// Also save on Enter key in the name input
+document.getElementById('preset-name').addEventListener('keydown', e => {
+  if (e.key === 'Enter') document.getElementById('preset-confirm').click();
+  if (e.key === 'Escape') document.getElementById('preset-cancel').click();
+});
+
+/* ═════════════════════════════════════
+   OSCILLOSCOPE
+═════════════════════════════════════ */
+function startScope() {
+  const cv = document.getElementById('scope');
+  const wr = document.getElementById('scope-wrap');
+  const cx = cv.getContext('2d');
+  const buf = new Float32Array(analyser.fftSize);
+  function sz() {
+    const dpr = window.devicePixelRatio||1;
+    cv.width  = wr.offsetWidth  * dpr;
+    cv.height = wr.offsetHeight * dpr;
+  }
+  sz(); window.addEventListener('resize', sz);
+  (function frame() {
+    requestAnimationFrame(frame);
+    if (!analyser) return;
+    analyser.getFloatTimeDomainData(buf);
+    const W=cv.width, H=cv.height;
+    cx.fillStyle='rgba(239,232,216,0.88)'; cx.fillRect(0,0,W,H);
+    cx.strokeStyle='rgba(196,180,152,0.32)'; cx.lineWidth=1;
+    for(let g=1;g<4;g++){cx.beginPath();cx.moveTo(0,H*g/4);cx.lineTo(W,H*g/4);cx.stroke();}
+    for(let g=1;g<8;g++){cx.beginPath();cx.moveTo(W*g/8,0);cx.lineTo(W*g/8,H);cx.stroke();}
+    cx.strokeStyle='rgba(180,140,100,0.28)'; cx.beginPath(); cx.moveTo(0,H/2); cx.lineTo(W,H/2); cx.stroke();
+    for(let p=0;p<2;p++){
+      cx.beginPath();
+      cx.strokeStyle=p?'rgba(115,84,52,0.82)':'rgba(184,92,56,0.10)';
+      cx.lineWidth=p?1.3:5; cx.shadowBlur=p?3:0; cx.shadowColor='rgba(115,84,52,0.35)';
+      const step=Math.max(1,Math.floor(buf.length/W));
+      for(let x=0;x<W;x++){const v=buf[x*step]||0,y=(1-(v+1)/2)*H;x?cx.lineTo(x,y):cx.moveTo(x,y);}
+      cx.stroke();
+    }
+    cx.shadowBlur=0;
+  })();
+}
+
+/* ═════════════════════════════════════
+   KEYBOARD SHORTCUTS
+═════════════════════════════════════ */
+const KM = {
+  q:'tone-hi', w:'tone-mid', e:'tone-lo', r:'hh-open',
+  a:'kick',    s:'snare',    d:'cymbal',  f:'hh-closed',
+};
+window.addEventListener('keydown', e => {
+  if (document.documentElement.getAttribute('data-page')!=='drum') return;
+  if (e.repeat||e.metaKey||e.ctrlKey) return;
+  const type = KM[e.key]; if (!type) return;
+  if (!actx) bootAudio();
+  playDrum(type, 0.88);
+  padHit(type);
+});
+
+/* ═════════════════════════════════════
+   INIT
+═════════════════════════════════════ */
+buildKnobs();
+bindPads();
+applyKitDefaults('acoustic');  // start with acoustic knob positions
+initPresets();                  // restore any saved custom presets from localStorage
+
+})();
 
 /* ════════════════════════════════════════════════════════════
    PAGE: KEYS — MegaSynth engine, ported from the original into the suite.
