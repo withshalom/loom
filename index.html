@@ -8,7 +8,7 @@
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&family=EB+Garamond:wght@400;500&family=Lato:wght@300;400;700&family=Orbitron:wght@700;900&family=Share+Tech+Mono&display=swap');
 
-  /* ── Shell chrome (constant LOOM-suite identity) ── */
+  /* ── Shell chrome (constant LOOM identity) ── */
   :root{
     --chrome-bg:#1c1309; --chrome-bg2:#120c06; --chrome-border:#33251420;
     --oak:#8a6030; --amber:#c8a060; --amber-bright:#e6c486; --amber-glow:rgba(200,160,96,.5);
@@ -109,18 +109,19 @@
   #page-loom .hint{ text-align:center; font-size:11.5px; font-style:italic; color:var(--pfaint); padding:10px 0 0; min-height:18px; transition:opacity .3s; }
 
   /* ════ PAGE: DRUMS — MicroDrum (ported from original, scoped under #page-drum) ════ */
+  :root[data-page="drum"] .chrome-top{ display:none; }             /* auto-hide transport on Drums, same as Keys */
   #page-drum{
     --cream:#f7f3ec; --parchment:#efe8d8; --warm-tan:#d4c4a8; --biscuit:#c8ae88;
     --brown:#8b6a42; --espresso:#4a3020; --shadow:rgba(74,48,32,0.11); --shadow-deep:rgba(74,48,32,0.22);
     --accent:#b85c38; --accent-lt:rgba(184,92,56,0.16); --text:#3d2b1a; --text-soft:rgba(61,43,26,0.42); --text-faint:rgba(61,43,26,0.20);
-    overflow:hidden; background:var(--cream); color:var(--text); font-family:'Lato',sans-serif; font-weight:300;
+    overflow:hidden; background:radial-gradient(ellipse at 50% -10%, #c8a060 0%, #8a6030 55%, #6b4a26 100%); color:var(--text); font-family:'Lato',sans-serif; font-weight:300;
   }
   #page-drum::before{ content:''; position:absolute; inset:0; z-index:0; pointer-events:none;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E"); }
   #page-drum #app{ position:relative; z-index:1; display:flex; flex-direction:column; width:100%; height:100%; padding:10px 12px; gap:7px; }
   #page-drum #header{ display:flex; align-items:center; gap:12px; flex-shrink:0; height:46px; }
-  #page-drum .logo-title{ font-family:'Playfair Display',Georgia,serif; font-weight:700; font-size:clamp(15px,4vw,24px); color:var(--espresso); letter-spacing:1px; line-height:1; flex-shrink:0; }
-  #page-drum .logo-sub{ font-size:clamp(6px,1.5vw,8px); color:var(--text-soft); letter-spacing:4px; text-transform:uppercase; margin-top:3px; }
+  #page-drum .logo-title{ font-family:'Playfair Display',Georgia,serif; font-weight:700; font-size:clamp(15px,4vw,24px); color:#f5e2b8; letter-spacing:1px; line-height:1; flex-shrink:0; text-shadow:0 1px 3px rgba(0,0,0,0.3); }
+  #page-drum .logo-sub{ font-size:clamp(6px,1.5vw,8px); color:rgba(245,226,184,0.65); letter-spacing:4px; text-transform:uppercase; margin-top:3px; }
   #page-drum #scope-wrap{ flex:1; height:100%; background:var(--parchment); border:1px solid var(--warm-tan); border-radius:8px; overflow:hidden; position:relative; box-shadow:inset 0 1px 3px var(--shadow); }
   #page-drum #scope{ display:block; width:100%; height:100%; }
   #page-drum #scope-idle{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; font-size:7px; color:var(--text-faint); letter-spacing:4px; text-transform:uppercase; pointer-events:none; }
@@ -144,10 +145,10 @@
   #page-drum .klbl{ font-size:clamp(6px,1.6vw,8px); color:var(--text-soft); letter-spacing:2px; text-transform:uppercase; }
   #page-drum .kval{ font-size:clamp(5px,1.4vw,7px); color:var(--text-faint); font-family:monospace; }
   #page-drum #pad-wrap{ flex:1; min-height:0; display:grid; grid-template-columns:1fr 1fr 1fr 1fr; grid-template-rows:1fr 1fr; gap:8px; }
-  #page-drum .pad{ position:relative; border-radius:14px; border:1.5px solid var(--warm-tan); background:var(--cream); box-shadow:0 5px 16px var(--shadow), 0 1px 3px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.82), inset 0 -2px 0 var(--shadow); cursor:pointer; touch-action:none; overflow:hidden; transition:background .06s, box-shadow .06s, border-color .06s, transform .07s; -webkit-tap-highlight-color:transparent; }
-  #page-drum .pad::before{ content:''; position:absolute; top:0; left:0; right:0; height:42%; background:linear-gradient(to bottom,rgba(255,255,255,0.58),transparent); border-radius:14px 14px 0 0; pointer-events:none; }
-  #page-drum .pad::after{ content:''; position:absolute; bottom:0; left:0; right:0; height:5px; background:linear-gradient(to bottom,transparent,var(--shadow)); border-radius:0 0 14px 14px; pointer-events:none; transition:opacity .06s; }
-  #page-drum .pad.hit{ background:var(--parchment); border-color:var(--biscuit); transform:scale(0.962) translateY(2px); box-shadow:0 1px 6px var(--shadow), inset 0 3px 10px var(--shadow-deep), inset 0 1px 0 var(--parchment); }
+  #page-drum .pad{ position:relative; border-radius:14px; border:1.5px solid #856e4d; background:radial-gradient(circle at 50% 42%, #ecd4a9 0%, #d7ba89 64%, #af8f62 100%); box-shadow:0 5px 16px var(--shadow-deep), 0 1px 3px var(--shadow), inset 0 1px 0 rgba(255,255,255,0.4), inset 0 -2px 0 rgba(60,35,10,0.25); cursor:pointer; touch-action:none; overflow:hidden; transition:background .06s, box-shadow .06s, border-color .06s, transform .07s; -webkit-tap-highlight-color:transparent; }
+  #page-drum .pad::before{ content:''; position:absolute; top:0; left:0; right:0; height:42%; background:linear-gradient(to bottom,rgba(255,255,255,0.32),transparent); border-radius:14px 14px 0 0; pointer-events:none; }
+  #page-drum .pad::after{ content:''; position:absolute; bottom:0; left:0; right:0; height:5px; background:linear-gradient(to bottom,transparent,rgba(60,35,10,0.35)); border-radius:0 0 14px 14px; pointer-events:none; transition:opacity .06s; }
+  #page-drum .pad.hit{ background:radial-gradient(circle at 50% 42%, #f5e2b8 0%, #d9ad78 65%, #b8863f 100%); border-color:#e6c486; transform:scale(0.962) translateY(2px); box-shadow:0 1px 6px var(--shadow-deep), inset 0 3px 10px rgba(40,20,5,0.4), inset 0 1px 0 rgba(255,255,255,0.3); }
   #page-drum .pad.hit::after{ opacity:0; }
   #page-drum .ripple{ position:absolute; border-radius:50%; background:var(--accent-lt); transform:scale(0); animation:md-rip .5s ease-out forwards; pointer-events:none; }
   @keyframes md-rip{ to{ transform:scale(5); opacity:0; } }
@@ -160,18 +161,28 @@
   #page-drum #preset-confirm{ background:var(--brown); color:var(--cream); border-color:var(--brown); }
   #page-drum #preset-cancel{ background:var(--parchment); color:var(--text-soft); }
   @media (orientation:landscape){
-    #page-drum #app{ gap:4px; padding-top:4px; padding-bottom:5px; }
-    #page-drum #header{ height:34px; }
+    #page-drum #app{
+      display:grid; grid-template-columns:1fr 118px; grid-template-rows:auto 1fr;
+      gap:6px; padding:6px 8px; height:100%;
+    }
+    #page-drum #header{ grid-column:1; grid-row:1; height:32px; }
     #page-drum .logo-sub{ display:none; }
     #page-drum .logo-title{ font-size:clamp(13px,2.8vw,19px); }
-    #page-drum #knob-strip{ padding:4px 12px 6px; gap:8px; }
-    #page-drum .kbody{ width:34px; height:34px; }
-    #page-drum .kneedle{ width:2px; height:10px; }
-    #page-drum .kgloss{ top:5px; left:8px; width:7px; height:5px; }
+    #page-drum #pad-wrap{ grid-column:1; grid-row:2; min-height:0; gap:6px; }
+    #page-drum #knob-strip{
+      grid-column:2; grid-row:1/3;
+      flex-direction:column; align-items:stretch; gap:8px;
+      padding:8px 8px 8px; overflow-y:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    }
+    #page-drum #knob-strip::-webkit-scrollbar{ display:none; }
+    #page-drum .kgrp{ flex-shrink:0; }
+    #page-drum .ksep{ width:auto; height:1px; align-self:stretch; margin:2px 0; }
+    #page-drum .krow{ justify-content:center; flex-wrap:wrap; gap:6px; }
+    #page-drum .kbody{ width:32px; height:32px; }
+    #page-drum .kneedle{ width:2px; height:9px; }
+    #page-drum .kgloss{ top:5px; left:7px; width:6px; height:4px; }
     #page-drum .kval{ display:none; }
     #page-drum .kgrp-lbl{ font-size:clamp(4px,1.1vw,6px); }
-    #page-drum .krow{ gap:8px; }
-    #page-drum #pad-wrap{ gap:6px; }
   }
 
   /* ════ PAGE: KEYS — MegaSynth (ported from original, scoped + ms- prefixed) ════ */
@@ -219,22 +230,42 @@
   #page-keys .bk::after{ content:''; position:absolute; top:4px; left:3px; right:3px; height:14%; background:rgba(255,255,255,0.03); border-radius:2px; pointer-events:none; }
   #page-keys .bk.on{ background:linear-gradient(to bottom,#262626,#131313); border-bottom:1px solid #2a2a2a; box-shadow:inset 0 2px 8px rgba(255,25,25,0.1); }
   @media (orientation: landscape){
-    #page-keys #ms-app{ gap:3px; padding-top:3px; padding-bottom:3px; }
-    #page-keys #ms-header{ height:34px; gap:6px; }
+    #page-keys #ms-app{
+      display:grid; grid-template-columns:1fr 120px; grid-template-rows:auto auto 1fr;
+      gap:5px; padding:6px; height:100%;
+    }
+    #page-keys #ms-header{ grid-column:1; grid-row:1; height:32px; gap:6px; }
     #page-keys .ms-sub{ display:none; }
     #page-keys .ms-logo{ font-size:clamp(10px,2.5vw,16px); letter-spacing:4px; }
     #page-keys #ms-pwr-led{ width:7px; height:7px; }
-    #page-keys #ms-sel-bar{ padding:3px 6px; gap:3px; border-radius:7px; }
-    #page-keys .sbtn{ height:26px; min-width:26px; padding:0 6px; font-size:clamp(6px,1.8vw,9px); }
-    #page-keys .sbtn svg{ width:24px; height:16px; }
-    #page-keys #ms-knob-strip{ padding:3px 8px 4px; gap:8px; border-radius:7px; }
-    #page-keys .kbody{ width:32px; height:32px; }
-    #page-keys .kneedle{ width:2px; height:10px; }
-    #page-keys .kgloss{ top:5px; left:7px; width:7px; height:5px; }
+    #page-keys #ms-kb-wrap{ grid-column:1; grid-row:2/4; min-height:0; }
+    #page-keys #ms-sel-bar{
+      grid-column:2; grid-row:1/3;
+      flex-direction:column; align-items:stretch; gap:4px;
+      max-height:42vh;
+      padding:5px 6px; overflow-y:auto; overflow-x:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    }
+    #page-keys #ms-sel-bar::-webkit-scrollbar{ display:none; }
+    #page-keys .sel-group{ flex-direction:column; align-items:flex-start; gap:2px; }
+    #page-keys .sel-sep{ width:auto; height:1px; margin:1px 0; }
+    #page-keys #ms-wave-grp, #page-keys #ms-rng-grp, #page-keys #ms-oct-grp{ flex-wrap:wrap; }
+    #page-keys .sbtn{ height:22px; min-width:22px; padding:0 4px; font-size:clamp(6px,1.6vw,8px); }
+    #page-keys .sbtn svg{ width:18px; height:12px; }
+    #page-keys #ms-knob-strip{
+      grid-column:2; grid-row:3;
+      flex-direction:column; align-items:stretch; gap:8px;
+      padding:6px 8px; overflow-y:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    }
+    #page-keys #ms-knob-strip::-webkit-scrollbar{ display:none; }
+    #page-keys .kstrip-grp{ flex-shrink:0; }
+    #page-keys .kstrip-sep{ width:auto; height:1px; align-self:stretch; margin:2px 0; }
+    #page-keys .kstrip-row{ justify-content:center; flex-wrap:wrap; gap:6px; }
+    #page-keys .kbody{ width:30px; height:30px; }
+    #page-keys .kneedle{ width:2px; height:9px; }
+    #page-keys .kgloss{ top:5px; left:6px; width:6px; height:4px; }
     #page-keys .klbl{ font-size:clamp(5px,1.4vw,6.5px); }
     #page-keys .kval{ display:none; }
     #page-keys .kstrip-lbl{ font-size:clamp(4px,1.2vw,6px); letter-spacing:2px; }
-    #page-keys .kstrip-row{ gap:7px; }
     #page-keys .kstrip-grp{ gap:2px; }
   }
 </style>
@@ -364,7 +395,7 @@ function makeImpulse(ctx,dur,decay){
 function noiseBuf(ctx,dur){ const len=Math.floor(ctx.sampleRate*dur); const b=ctx.createBuffer(1,len,ctx.sampleRate); const d=b.getChannelData(0); for(let i=0;i<len;i++) d[i]=Math.random()*2-1; return b; }
 const mtf = m => 440*Math.pow(2,(m-69)/12);
 
-const Suite = {
+const Loom = {
   ctx:null, master:null, comp:null, revIn:null, ready:false,
   ensureAudio(){
     if(this.ready){ if(this.ctx.state==='suspended') this.ctx.resume(); return; }
@@ -391,9 +422,9 @@ const Transport = {
   stepDur(){ return (60/this.bpm)/4; },
   toggle(){ this.isPlaying ? this.stop() : this.start(); },
   start(){
-    Suite.ensureAudio(); if(this.isPlaying) return;
+    Loom.ensureAudio(); if(this.isPlaying) return;
     this.isPlaying=true; this.currentStep=0; this.barCount=0;
-    this.nextNoteTime=Suite.ctx.currentTime+0.06; this.stepQueue.length=0;
+    this.nextNoteTime=Loom.ctx.currentTime+0.06; this.stepQueue.length=0;
     this._tick(); requestAnimationFrame(()=>this._draw());
     setPlayIcon(true);
   },
@@ -402,7 +433,7 @@ const Transport = {
     setPlayIcon(false); barCounter.textContent='1.1'; loomShuttle(-1);
   },
   _tick(){
-    const ctx=Suite.ctx;
+    const ctx=Loom.ctx;
     while(this.nextNoteTime < ctx.currentTime + this.AHEAD){
       const step=this.currentStep, time=this.nextNoteTime, bar=this.barCount;
       for(let i=0;i<this.subs.length;i++) this.subs[i](step,time,bar);
@@ -415,7 +446,7 @@ const Transport = {
   },
   _draw(){
     if(!this.isPlaying) return;
-    const ctx=Suite.ctx; let s=-1, b=this.barCount;
+    const ctx=Loom.ctx; let s=-1, b=this.barCount;
     while(this.stepQueue.length && this.stepQueue[0].time < ctx.currentTime){ const e=this.stepQueue.shift(); s=e.step; b=e.bar; }
     if(s>=0){ loomShuttle(s); barCounter.textContent=(b+1)+'.'+(Math.floor(s/4)+1); }
     requestAnimationFrame(()=>this._draw());
@@ -430,7 +461,7 @@ function setPlayIcon(p){
     ? '<rect x="3" y="2.5" width="4" height="13" rx="1" fill="#1a1208"/><rect x="11" y="2.5" width="4" height="13" rx="1" fill="#1a1208"/>'
     : '<path d="M3 2 L15 9 L3 16 Z" fill="#1a1208"/>';
 }
-document.getElementById('playBtn').addEventListener('click',()=>{ Suite.ensureAudio(); Transport.toggle(); });
+document.getElementById('playBtn').addEventListener('click',()=>{ Loom.ensureAudio(); Transport.toggle(); });
 document.getElementById('bpmUp').addEventListener('click',()=>setBpm(Transport.bpm+2));
 document.getElementById('bpmDown').addEventListener('click',()=>setBpm(Transport.bpm-2));
 function setBpm(v){ Transport.bpm=Math.max(70,Math.min(180,v)); bpmVal.textContent=Transport.bpm; }
@@ -442,7 +473,7 @@ function showPage(id){
   document.documentElement.setAttribute('data-page', id);
   if(id==='keys' && window.MSRelayout) requestAnimationFrame(window.MSRelayout);
 }
-document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click',()=>{ Suite.ensureAudio(); showPage(t.dataset.page); }));
+document.querySelectorAll('.tab').forEach(t=> t.addEventListener('click',()=>{ Loom.ensureAudio(); showPage(t.dataset.page); }));
 
 /* ── LOOM theme toggle (scoped to the LOOM page only) ── */
 document.getElementById('themeBtn').addEventListener('click',function(){
@@ -450,7 +481,7 @@ document.getElementById('themeBtn').addEventListener('click',function(){
   pg.setAttribute('data-theme', dark?'light':'dark'); this.textContent = dark?'☀':'☾';
 });
 
-document.body.addEventListener('touchstart',()=>{ if(Suite.ctx && Suite.ctx.state==='suspended') Suite.ctx.resume(); }, {passive:true});
+document.body.addEventListener('touchstart',()=>{ if(Loom.ctx && Loom.ctx.state==='suspended') Loom.ctx.resume(); }, {passive:true});
 
 /* ════════════════════════════════════════════════════════════
    PAGE: LOOM  (v1 launcher, driven by the shared Transport)
@@ -493,21 +524,21 @@ TRACKS.forEach(t=>{ t.active=null; t.pending=undefined; t.hasPending=false; t.mu
 
 let loomAudio=false;
 function loomInitAudio(){
-  if(loomAudio) return; const ctx=Suite.ctx;
+  if(loomAudio) return; const ctx=Loom.ctx;
   TRACKS.forEach(t=>{
-    t.output=ctx.createGain(); t.output.gain.value=t.muted?0:1; t.output.connect(Suite.master);
-    if(t.reverb){ const s=ctx.createGain(); s.gain.value=t.reverb; t.output.connect(s); s.connect(Suite.revIn); }
+    t.output=ctx.createGain(); t.output.gain.value=t.muted?0:1; t.output.connect(Loom.master);
+    if(t.reverb){ const s=ctx.createGain(); s.gain.value=t.reverb; t.output.connect(s); s.connect(Loom.revIn); }
   });
   loomAudio=true;
 }
-function loomEnsure(){ Suite.ensureAudio(); loomInitAudio(); }
+function loomEnsure(){ Loom.ensureAudio(); loomInitAudio(); }
 
 /* Workshop voices (the v1 sound) */
-function playKick(t,out){ const ctx=Suite.ctx; const o=ctx.createOscillator(), g=ctx.createGain();
+function playKick(t,out){ const ctx=Loom.ctx; const o=ctx.createOscillator(), g=ctx.createGain();
   o.frequency.setValueAtTime(150,t); o.frequency.exponentialRampToValueAtTime(48,t+0.09);
   g.gain.setValueAtTime(1,t); g.gain.exponentialRampToValueAtTime(0.0001,t+0.32);
   o.connect(g).connect(out); o.start(t); o.stop(t+0.34); }
-function playSnare(t,out){ const ctx=Suite.ctx;
+function playSnare(t,out){ const ctx=Loom.ctx;
   const n=ctx.createBufferSource(); n.buffer=noiseBuf(ctx,0.2);
   const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=1200;
   const ng=ctx.createGain(); ng.gain.setValueAtTime(0.7,t); ng.gain.exponentialRampToValueAtTime(0.0001,t+0.18);
@@ -515,12 +546,12 @@ function playSnare(t,out){ const ctx=Suite.ctx;
   const o=ctx.createOscillator(); o.type='triangle'; o.frequency.value=180;
   const og=ctx.createGain(); og.gain.setValueAtTime(0.4,t); og.gain.exponentialRampToValueAtTime(0.0001,t+0.12);
   o.connect(og).connect(out); o.start(t); o.stop(t+0.14); }
-function playHat(t,open,out){ const ctx=Suite.ctx;
+function playHat(t,open,out){ const ctx=Loom.ctx;
   const n=ctx.createBufferSource(); n.buffer=noiseBuf(ctx,open?0.22:0.06);
   const hp=ctx.createBiquadFilter(); hp.type='highpass'; hp.frequency.value=7000;
   const g=ctx.createGain(); const d=open?0.18:0.045; g.gain.setValueAtTime(0.31,t); g.gain.exponentialRampToValueAtTime(0.0001,t+d);
   n.connect(hp).connect(g).connect(out); n.start(t); n.stop(t+d+0.02); }
-function playTone(t,freq,dur,type,level,out,opts){ const ctx=Suite.ctx; opts=opts||{};
+function playTone(t,freq,dur,type,level,out,opts){ const ctx=Loom.ctx; opts=opts||{};
   const o=ctx.createOscillator(); o.type=type; o.frequency.value=freq;
   const f=ctx.createBiquadFilter(); f.type='lowpass'; f.frequency.value=opts.filter||3000; if(opts.q) f.Q.value=opts.q;
   if(opts.filterEnv){ f.frequency.setValueAtTime(opts.filter||800,t); f.frequency.exponentialRampToValueAtTime(Math.max(120,(opts.filter||800)*0.3),t+dur); }
@@ -607,8 +638,16 @@ function renderPadStates(){
 }
 function tapPad(ti,ci){
   loomEnsure(); hideHint(); const t=TRACKS[ti];
-  if(!Transport.isPlaying){ t.active=ci; t.pending=undefined; t.hasPending=false; Transport.start(); renderPadStates(); return; }
-  if(t.active===ci){ t.pending=null; t.hasPending=true; } else { t.pending=ci; t.hasPending=true; }
+  // Individual track triggers are immediate and fully independent — they
+  // never wait for the next bar, and never touch any other track's state.
+  // Tapping the pad that's already active for this track turns just this
+  // track off; tapping a different pad on this track switches straight to it.
+  // Set active state BEFORE starting the transport: start() synchronously
+  // schedules the very first step using whatever active-state exists at
+  // that moment, so setting it after would silently skip the first hit.
+  t.active = (t.active===ci) ? null : ci;
+  t.pending = undefined; t.hasPending = false;
+  if(!Transport.isPlaying) Transport.start();
   renderPadStates();
 }
 function launchScene(ci){
@@ -622,7 +661,7 @@ function clearAllLoom(){
 }
 function toggleMute(ti){
   const t=TRACKS[ti]; t.muted=!t.muted;
-  if(t.output) t.output.gain.setTargetAtTime(t.muted?0:1, Suite.ctx.currentTime, 0.012);
+  if(t.output) t.output.gain.setTargetAtTime(t.muted?0:1, Loom.ctx.currentTime, 0.012);
   renderPadStates();
 }
 let hintHidden=false;
@@ -630,7 +669,7 @@ function hideHint(){ if(hintHidden) return; hintHidden=true; hint.style.opacity=
 
 /* ════════════════════════════════════════════════════════════
    PAGE: DRUMS — MicroDrum engine, ported from the original.
-   Closure-wrapped; original IDs kept (collision-free); voices -> Suite.master.
+   Closure-wrapped; original IDs kept (collision-free); voices -> Loom.master.
    ════════════════════════════════════════════════════════════ */
 (function(){
 
@@ -678,7 +717,7 @@ const KNOB_GROUPS = [
 ═════════════════════════════════════ */
 function bootAudio() {
   if (actx) { actx.resume(); return; }
-  Suite.ensureAudio(); actx = Suite.ctx;
+  Loom.ensureAudio(); actx = Loom.ctx;
 
   masterGain = actx.createGain();
   masterGain.gain.value = P.volume;
@@ -721,7 +760,7 @@ function bootAudio() {
   reverbWet.connect(reverbConv);
   reverbConv.connect(comp);
   comp.connect(analyser);
-  analyser.connect(Suite.master);
+  analyser.connect(Loom.master);
 
   document.getElementById('scope-idle').style.display = 'none';
   startScope();
@@ -2976,7 +3015,7 @@ function buildKnob(def, container) {
    BIND PADS
 ═════════════════════════════════════ */
 function bindPads() {
-  document.querySelectorAll('.pad').forEach(el => {
+  document.querySelectorAll('#page-drum .pad').forEach(el => {
     const type = el.getAttribute('data-pad');
     el.addEventListener('mousedown', e => {
       e.preventDefault();
@@ -3190,8 +3229,8 @@ initPresets();                  // restore any saved custom presets from localSt
 })();
 
 /* ════════════════════════════════════════════════════════════
-   PAGE: KEYS — MegaSynth engine, ported from the original into the suite.
-   Wrapped in a closure; ms- prefixed DOM; audio routed into Suite.master.
+   PAGE: KEYS — MegaSynth engine, ported from the original into LOOM.
+   Wrapped in a closure; ms- prefixed DOM; audio routed into Loom.master.
    ════════════════════════════════════════════════════════════ */
 (function(){
   const $ = id => document.getElementById(id);
@@ -3212,14 +3251,14 @@ initPresets();                  // restore any saved custom presets from localSt
   const held={};
 
   function synthEnsure(){
-    Suite.ensureAudio();
+    Loom.ensureAudio();
     if(booted) return;
-    const actx=Suite.ctx;
+    const actx=Loom.ctx;
     const master=actx.createGain(); master.gain.value=P.volume;
     const comp=actx.createDynamicsCompressor();
     comp.threshold.value=-3;comp.knee.value=2;comp.ratio.value=20;comp.attack.value=.001;comp.release.value=.08;
     analyser=actx.createAnalyser(); analyser.fftSize=1024;
-    master.connect(comp);comp.connect(analyser);analyser.connect(Suite.master);
+    master.connect(comp);comp.connect(analyser);analyser.connect(Loom.master);
     const conv=actx.createConvolver();
     const sr=actx.sampleRate,len=Math.floor(sr*2.5);
     const ib=actx.createBuffer(2,len,sr);
@@ -3235,7 +3274,7 @@ initPresets();                  // restore any saved custom presets from localSt
   }
 
   function noteOn(id,f){
-    synthEnsure(); const actx=Suite.ctx;
+    synthEnsure(); const actx=Loom.ctx;
     if(held[id])return;
     const osc=actx.createOscillator();
     osc.type=wave; osc.frequency.value=f; osc.detune.value=P.detune*100;
@@ -3250,8 +3289,8 @@ initPresets();                  // restore any saved custom presets from localSt
     osc.start(); held[id]={osc,env}; markKey(id,true);
   }
   function noteOff(id){
-    const n=held[id]; if(!n||!Suite.ctx)return;
-    const actx=Suite.ctx; const t=actx.currentTime,rel=Math.max(.003,P.release);
+    const n=held[id]; if(!n||!Loom.ctx)return;
+    const actx=Loom.ctx; const t=actx.currentTime,rel=Math.max(.003,P.release);
     n.env.gain.cancelScheduledValues(t);
     n.env.gain.setValueAtTime(Math.max(.00001,n.env.gain.value),t);
     n.env.gain.exponentialRampToValueAtTime(.00001,t+rel);
