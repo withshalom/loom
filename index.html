@@ -230,7 +230,7 @@
   #page-keys .kgloss{ position:absolute; top:7px; left:10px; width:10px; height:7px; border-radius:50%; background:rgba(255,255,255,0.035); pointer-events:none; }
   #page-keys .klbl{ font-size:clamp(8px,1.8vw,9.5px); color:rgba(225,50,50,0.75); letter-spacing:1.5px; text-transform:uppercase; }
   #page-keys .kval{ font-size:clamp(8px,1.6vw,9px); color:rgba(255,90,90,0.5); font-family:monospace; }
-  #page-keys #ms-kb-wrap{ flex:1; min-height:0; position:relative; overflow:hidden; border-radius:10px; border:1px solid rgba(125,12,12,0.5); box-shadow:0 5px 24px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,55,55,0.05); background:#080101; }
+  #page-keys #ms-kb-wrap{ flex:1; min-height:0; position:relative; overflow:hidden; border-radius:10px; border:1px solid rgba(125,12,12,0.5); box-shadow:0 5px 24px rgba(0,0,0,0.72), inset 0 1px 0 rgba(255,55,55,0.05); background:#080101; touch-action:none; }
   #page-keys #ms-kb{ position:absolute; inset:0; }
   #page-keys .wk{ position:absolute; top:0; bottom:0; border-left:1px solid rgba(0,0,0,0.5); border-right:1px solid rgba(0,0,0,0.3); border-bottom:7px solid rgba(44,2,2,0.97); border-radius:0 0 6px 6px; background:linear-gradient(to bottom, rgba(162,16,16,0.92) 0%, rgba(108,7,7,0.96) 62%, rgba(86,4,4,0.99) 100%); box-shadow:inset 0 1px 0 rgba(255,125,125,0.1); touch-action:none; cursor:pointer; transition:background .04s,box-shadow .04s,border-bottom .04s; }
   #page-keys .wk::after{ content:''; position:absolute; top:0; left:0; right:0; height:22%; background:linear-gradient(to bottom,rgba(255,110,110,0.07),transparent); pointer-events:none; }
@@ -3771,7 +3771,13 @@ window.DrumEngine={
   }
   function buildWaveSel(){ const grp=$('ms-wave-grp'); ['sine','triangle','sawtooth','square'].forEach(w=>{ const btn=document.createElement('button'); btn.className='sbtn'+(w===wave?' on':''); btn.setAttribute('data-wave',w); const col=w===wave?'#ff4040':'rgba(190,35,35,0.3)'; btn.innerHTML='<svg width="28" height="18" viewBox="0 0 20 24"><path d="'+WPATHS[w]+'" stroke="'+col+'" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>'; btn.addEventListener('click',()=>{ wave=w; grp.querySelectorAll('.sbtn[data-wave]').forEach(b=>{ const on=b.getAttribute('data-wave')===w; b.classList.toggle('on',on); b.querySelector('path').setAttribute('stroke',on?'#ff4040':'rgba(190,35,35,0.3)'); }); }); grp.appendChild(btn); }); }
   function buildRngSel(){ const grp=$('ms-rng-grp'); [{v:1,l:'1 OCT'},{v:2,l:'2 OCT'},{v:3,l:'3 OCT'}].forEach(def=>{ const btn=document.createElement('button'); btn.className='sbtn'+(def.v===rng?' on':''); btn.textContent=def.l; btn.setAttribute('data-r',def.v); btn.addEventListener('click',()=>{ rng=def.v; grp.querySelectorAll('.sbtn[data-r]').forEach(b=>b.classList.toggle('on',parseInt(b.getAttribute('data-r'))===rng)); buildKeyboard(); }); grp.appendChild(btn); }); }
-  function buildOctSel(){ const grp=$('ms-oct-grp'); [2,3,4,5,6].forEach(o=>{ const btn=document.createElement('button'); btn.className='sbtn'+(o===oct?' on':''); btn.textContent=o; btn.setAttribute('data-o',o); btn.addEventListener('click',()=>{ oct=o; grp.querySelectorAll('.sbtn[data-o]').forEach(b=>b.classList.toggle('on',parseInt(b.getAttribute('data-o'))===o)); buildKeyboard(); }); grp.appendChild(btn); }); }
+  function setOctave(o){
+    oct=Math.max(2,Math.min(6,o));
+    const grp=$('ms-oct-grp');
+    if(grp) grp.querySelectorAll('.sbtn[data-o]').forEach(b=>b.classList.toggle('on',parseInt(b.getAttribute('data-o'))===oct));
+    buildKeyboard();
+  }
+  function buildOctSel(){ const grp=$('ms-oct-grp'); [2,3,4,5,6].forEach(o=>{ const btn=document.createElement('button'); btn.className='sbtn'+(o===oct?' on':''); btn.textContent=o; btn.setAttribute('data-o',o); btn.addEventListener('click',()=>setOctave(o)); grp.appendChild(btn); }); }
   function buildKnobs(){ const strip=$('ms-knob-strip'); KNOB_GROUPS.forEach((grp,gi)=>{ if(gi>0){const sep=document.createElement('div');sep.className='kstrip-sep';strip.appendChild(sep);} const wrap=document.createElement('div');wrap.className='kstrip-grp'; const lbl=document.createElement('div');lbl.className='kstrip-lbl';lbl.textContent=grp.lbl; const row=document.createElement('div');row.className='kstrip-row'; grp.knobs.forEach(def=>buildKnob(def,row)); wrap.appendChild(lbl);wrap.appendChild(row);strip.appendChild(wrap); }); }
   function buildKnob(def,container){
     const wrap=document.createElement('div');wrap.className='kwrap';
@@ -3796,7 +3802,65 @@ window.DrumEngine={
   let rsT;
   window.addEventListener('resize',()=>{ if(document.documentElement.getAttribute('data-page')!=='keys')return; clearTimeout(rsT);rsT=setTimeout(buildKeyboard,120); });
 
-  buildWaveSel(); buildRngSel(); buildOctSel(); buildKnobs();
+  /* glissando / smear-play: press a key, then drift into neighboring keys
+     while still down, and each one sounds as your finger crosses into it —
+     exactly like running a finger across a real keyboard.
+
+     Why this needs its own handling: once a touch begins on an element, the
+     browser keeps delivering that touch's move/end events to the ORIGINAL
+     element no matter where the finger physically goes — it never re-targets
+     to whatever key is now underneath. So sliding onto key B never fires
+     anything on key B at all; nothing is listening there for a touch that
+     didn't start on it. The fix is exactly what it sounds like: on every
+     move, explicitly check which key is currently under the pointer, and
+     treat entering a new key's area as equivalent to a tap on it.
+
+     bindKey()'s own mousedown/touchstart still handles the very first press
+     unchanged — this only takes over once the finger drifts to a DIFFERENT
+     key, releasing the old note and starting the new one. Pointer capture
+     means this keeps tracking correctly all the way to release, even though
+     the physical finger is no longer anywhere near where it started. */
+  function freqFromId(id){
+    const m=/^([A-G]#?)(\d+)$/.exec(id);
+    return m ? hz(m[1], parseInt(m[2],10)) : null;
+  }
+  function bindGlissando(){
+    const wrap=$('ms-kb-wrap'); if(!wrap) return;
+    const active={}; // pointerId -> note id currently sounding for that finger
+
+    function keyIdAt(x,y){
+      const el=document.elementFromPoint(x,y);
+      const nid = el && el.getAttribute && el.getAttribute('data-nid');
+      return nid || null;
+    }
+    function begin(e){
+      try{ wrap.setPointerCapture(e.pointerId); }catch(err){}
+      // bindKey's own handler already started this note — just remember
+      // which key it is, so a later drift knows what to release.
+      active[e.pointerId]=keyIdAt(e.clientX,e.clientY);
+    }
+    function move(e){
+      if(!(e.pointerId in active)) return;
+      const nid=keyIdAt(e.clientX,e.clientY);
+      const prev=active[e.pointerId];
+      if(nid===prev) return;
+      if(prev) noteOff(prev);
+      if(nid){ const f=freqFromId(nid); if(f!=null) noteOn(nid,f); }
+      active[e.pointerId]=nid;
+    }
+    function end(e){
+      const prev=active[e.pointerId];
+      if(prev) noteOff(prev);
+      delete active[e.pointerId];
+      try{ wrap.releasePointerCapture(e.pointerId); }catch(err){}
+    }
+    wrap.addEventListener('pointerdown', begin);
+    wrap.addEventListener('pointermove', move);
+    wrap.addEventListener('pointerup', end);
+    wrap.addEventListener('pointercancel', end);
+  }
+
+  buildWaveSel(); buildRngSel(); buildOctSel(); buildKnobs(); bindGlissando();
   window.MSRelayout = buildKeyboard;
 
   /* ── LOOM playback + recording bridge ──
